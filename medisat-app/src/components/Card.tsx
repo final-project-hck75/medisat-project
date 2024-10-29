@@ -1,7 +1,7 @@
 export default function Card() {
     return (
         <>
-            <div className="bg-white rounded-xl border border-solid border-emerald-800 p-3 my-5">
+            <div className="bg-white rounded-xl border border-solid border-emerald-800 p-3 my-2">
                 <div className="flex flex-wrap justify-between ">
                     <p>Status Booked</p>
                     <p>Tanggal Pemeriksaan 10/10/2024</p>
