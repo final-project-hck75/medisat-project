@@ -16,15 +16,16 @@ export default function Login() {
 
                         <div>
                             <Label htmlFor="doctorsId">Id Dokter</Label>
-                            <Input type="doctorsId" placeholder="Email" />
+                            <Input type="doctorsId" placeholder="Id Dokter" />
                         </div>
 
                         <div>
                             <Label htmlFor="password">Sandi</Label>
                             <Input type="password" placeholder="Sandi" />
                         </div>
-
-                        <Button variant="auth">Button</Button>
+                        <Link href={"/doctors"}>
+                            <Button className="mt-5" variant="auth">Login</Button>
+                        </Link>
 
                         <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                             Belum punya akun? <Link href="#" className="font-medium text-primary-600 hover:underline text-emerald-500">Registrasi</Link>

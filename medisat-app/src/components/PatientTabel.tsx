@@ -38,14 +38,18 @@ export default function PatientTabel() {
                                         </Link>
                                         <TableCell>Jum'at 09:00 - 12:00</TableCell>
                                         <TableCell className="text-right">
-                                            <Button variant="auth">Tangani</Button>
+                                            <Link href="/doctors/records">
+                                                <Button variant="auth">Tangani</Button>
+                                            </Link>
                                         </TableCell>
                                     </TableRow>
                                     <TableRow>
                                         <TableCell className="font-medium">Ridwan</TableCell>
                                         <TableCell>Senin 12:00 - 15:00</TableCell>
                                         <TableCell className="text-right">
-                                            <Button variant="auth">Tangani</Button>
+                                            <Link href="/doctors/records">
+                                                <Button variant="auth">Tangani</Button>
+                                            </Link>
                                         </TableCell>
                                     </TableRow>
                                 </TableBody>
