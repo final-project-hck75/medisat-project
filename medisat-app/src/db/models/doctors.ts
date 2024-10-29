@@ -3,15 +3,19 @@ import { db } from "../config";
 import { ObjectId } from "mongodb";
 import { z } from "zod";
 
-export type DoctorType = {
-    _id:string,
-    employeeId:string,
-    name:string,
-    password:string,
-    phoneNumber:string,
-    polyclinic:string,
-    schedule:[string]
-}
+export const DoctorSchema = z.object({
+    employeeId:z.string({message:"Employee Id is required"}),
+    name:z.string({message:"Name is required"}),
+    password:z.string({message:"Password is required"}),
+    image:z.string({message:"Image is required"}),
+    phoneNumber:z.string({message:"Phone Number is required"}),
+    polyclinic:z.string({message:"Polyclinic is required"}),
+    schedule:z.array(z.string({message:"Schedule is required"})),
+    createdAt:z.date().default(new Date()).optional(),
+    updatedAt:z.date().default(new Date()).optional()
+})
+
+export type DoctorType = z.infer<typeof DoctorSchema>
 
 export const RecordSchema = z.object({
     name:z.string({message:"Name is required"}),
@@ -20,6 +24,7 @@ export const RecordSchema = z.object({
     symptom:z.string({message:"Symptom is required"}),
     disease:z.string({message:"Disease is required"}),
     recipe:z.string({message:"Recipe is required"}),
+    notes:z.string().optional(),
     checkupDate:z.string({message:"Checkup Date is required"}),
     patientId:z.string({message:"Patient Id is required"}),
     doctorId:z.string({message:"Doctor Id is required"}),
@@ -56,5 +61,16 @@ export default class Doctor {
         })
 
         return doctor
+    }
+
+    static async newDoctor(newDoctor:DoctorType){
+        await DoctorSchema.parseAsync(newDoctor);
+
+        const data = {
+            ...newDoctor,
+            password: await hash(newDoctor.password, 10)
+        }
+        data.createdAt = data.updatedAt = new Date()
+        await this.collDoc.insertOne(data);
     }
 }
