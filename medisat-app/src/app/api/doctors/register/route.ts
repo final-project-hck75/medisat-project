@@ -5,10 +5,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
     try {
-        const {employeeId, name, password, phoneNumber, polyclinic, schedule} = await request.json()
+        console.log("duer");
+        
+        const {employeeId, name, password, image, phoneNumber, polyclinic, schedule} = await request.json()
 
         await Doctor.newDoctor({
-            employeeId, name, password, phoneNumber, polyclinic, schedule
+            employeeId, name, password, image, phoneNumber, polyclinic, schedule
         })
 
         return NextResponse.json(

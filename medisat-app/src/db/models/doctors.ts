@@ -26,8 +26,8 @@ export const RecordSchema = z.object({
     recipe:z.string({message:"Recipe is required"}),
     notes:z.string().optional(),
     checkupDate:z.string({message:"Checkup Date is required"}),
-    patientId:z.string({message:"Patient Id is required"}),
-    doctorId:z.string({message:"Doctor Id is required"}),
+    patientId:z.instanceof(ObjectId,{message:"Patient Id is required"}),
+    doctorId:z.instanceof(ObjectId,{message:"Doctor Id is required"}),
     createdAt:z.date().default(new Date()).optional(),
     updatedAt:z.date().default(new Date()).optional()
 })
