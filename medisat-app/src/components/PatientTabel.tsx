@@ -1,3 +1,5 @@
+'use client'
+
 import {
     Table,
     TableBody,
@@ -21,43 +23,43 @@ export default function PatientTabel() {
                             Daftar Pasien
                         </h1>
 
-                        <div>
-                            <Table>
-                                <TableCaption>List pasien anda akan diupdate, tolong diupdate secara berkala</TableCaption>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead className="w-[100px]">Nama</TableHead>
-                                        <TableHead>Jadwal</TableHead>
-                                        <TableHead className="text-right">Aksi</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    <TableRow>
+                        <Table>
+                            <TableCaption>List pasien anda akan diupdate, tolong diupdate secara berkala</TableCaption>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead className="w-[100px]">Nama</TableHead>
+                                    <TableHead>Jadwal</TableHead>
+                                    <TableHead className="text-right">Aksi</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell className="font-medium">
                                         <Link href="/patient/detail">
-                                            <TableCell className="font-medium">Fani</TableCell>
+                                            Fani
                                         </Link>
-                                        <TableCell>Jum'at 09:00 - 12:00</TableCell>
-                                        <TableCell className="text-right">
-                                            <Link href="/doctors/records">
-                                                <Button variant="auth">Tangani</Button>
-                                            </Link>
-                                        </TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableCell className="font-medium">Ridwan</TableCell>
-                                        <TableCell>Senin 12:00 - 15:00</TableCell>
-                                        <TableCell className="text-right">
-                                            <Link href="/doctors/records">
-                                                <Button variant="auth">Tangani</Button>
-                                            </Link>
-                                        </TableCell>
-                                    </TableRow>
-                                </TableBody>
-                            </Table>
-                        </div>
+                                    </TableCell>
+                                    <TableCell>Jum'at 09:00 - 12:00</TableCell>
+                                    <TableCell className="text-right">
+                                        <Link href="/doctors/records">
+                                            <Button variant="auth">Tangani</Button>
+                                        </Link>
+                                    </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell className="font-medium">Ridwan</TableCell>
+                                    <TableCell>Senin 12:00 - 15:00</TableCell>
+                                    <TableCell className="text-right">
+                                        <Link href="/doctors/records">
+                                            <Button variant="auth">Tangani</Button>
+                                        </Link>
+                                    </TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
                     </div>
                 </div>
-            </div>
+            </div >
         </>
     )
 }
