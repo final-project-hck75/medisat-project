@@ -4,16 +4,17 @@ import { ObjectId } from "mongodb";
 import { z } from "zod";
 
 export const DoctorSchema = z.object({
-  employeeId: z.string({ message: "Employee Id is required" }),
-  name: z.string({ message: "Name is required" }),
-  password: z.string({ message: "Password is required" }),
-  image: z.string({ message: "Image is required" }),
-  phoneNumber: z.string({ message: "Phone Number is required" }),
-  polyclinic: z.string({ message: "Polyclinic is required" }),
-  schedule: z.array(z.string({ message: "Schedule is required" })),
-  createdAt: z.date().default(new Date()).optional(),
-  updatedAt: z.date().default(new Date()).optional(),
-});
+    _id: z.instanceof(ObjectId,{message:"Doctor Id is required"}),
+    employeeId:z.string({message:"Employee Id is required"}),
+    name:z.string({message:"Name is required"}),
+    password:z.string({message:"Password is required"}),
+    image:z.string({message:"Image is required"}),
+    phoneNumber:z.string({message:"Phone Number is required"}),
+    polyclinic:z.string({message:"Polyclinic is required"}),
+    schedule:z.array(z.string({message:"Schedule is required"})),
+    createdAt:z.date().default(new Date()).optional(),
+    updatedAt:z.date().default(new Date()).optional()
+})
 
 export type DoctorType = z.infer<typeof DoctorSchema>;
 

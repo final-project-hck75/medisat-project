@@ -1,10 +1,78 @@
+"use client"
+
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { ChangeEvent, FormEvent, useState } from "react";
+import Swal from 'sweetalert2'
+import { useRouter } from "next/navigation";
 
 
 export default function Login() {
+    const router = useRouter();
+    const [user, setUser] = useState({
+        employeeId: "",
+        password: ""
+    })
+
+    const handleSubmit = async (element: FormEvent<HTMLFormElement>) => {
+        // console.log(user.employeeId, "ini employeeId");
+        // console.log(user.password, "ini password");
+        
+        element.preventDefault();
+        try {
+
+            const res = await fetch('http://localhost:3000/api/doctors/login', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(user)
+            })
+            // console.log(res, "ini res");
+            const data = await res.json();
+            // console.log(data, "ini data=======");
+
+            if (!res.ok) {
+                throw data
+            }
+
+            Swal.fire(
+                {
+                    title: 'Success!',
+                    text: 'Login successful!',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#007bff',
+                    customClass: {
+                        confirmButton: 'bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md'
+                    }
+                }).then(() => {
+                    router.push("/doctors");
+                });
+        } catch (error) {
+            // console.log(error,"KSJDSHFHJSF");
+
+            Swal.fire(
+                {
+                    title: 'Error!',
+                    text: 'Login failed! Ivalid email or password',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#007bff',
+                    customClass: {
+                        confirmButton: 'bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md'
+                    }
+                });
+        }
+    }
+
+    const handleChange = (element: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = element.target;
+        setUser({ ...user, [name]: value });
+    };
+
     return (
         <>
             <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -13,23 +81,34 @@ export default function Login() {
                         <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                             Login
                         </h1>
+                        <form onSubmit={handleSubmit}>
+                            <div>
+                                <Label htmlFor="employeeId">Id Dokter</Label>
+                                <Input
+                                    type="text"
+                                    name="employeeId"
+                                    value={user.employeeId}
+                                    onChange={handleChange}
+                                    placeholder="Id Dokter"
+                                />
+                            </div>
 
-                        <div>
-                            <Label htmlFor="doctorsId">Id Dokter</Label>
-                            <Input type="doctorsId" placeholder="Id Dokter" />
-                        </div>
+                            <div>
+                                <Label htmlFor="password">Sandi</Label>
+                                <Input type="password"
+                                    name="password"
+                                    value={user.password}
+                                    onChange={handleChange}
+                                    placeholder="Sandi"
+                                />
+                            </div>
 
-                        <div>
-                            <Label htmlFor="password">Sandi</Label>
-                            <Input type="password" placeholder="Sandi" />
-                        </div>
-                        <Link href={"/doctors"}>
-                            <Button className="mt-5" variant="auth">Login</Button>
-                        </Link>
+                            <Button type="submit" className="mt-5" variant="auth">Login</Button>
 
-                        <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                            Belum punya akun? <Link href="#" className="font-medium text-primary-600 hover:underline text-emerald-500">Registrasi</Link>
-                        </p>
+                            <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+                                Belum punya akun? <Link href="#" className="font-medium text-primary-600 hover:underline text-emerald-500">Registrasi</Link>
+                            </p>
+                        </form>
                     </div>
                 </div>
             </div>
