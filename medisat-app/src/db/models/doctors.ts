@@ -18,14 +18,14 @@ export const DoctorSchema = z.object({
 export type DoctorType = z.infer<typeof DoctorSchema>
 
 export const RecordSchema = z.object({
-    name:z.string({message:"Name is required"}),
+    _id : z.instanceof(ObjectId).optional(),
     bookDate:z.string({message:"Book Date is required"}),
     status:z.string({message:"Status is required"}),
-    symptom:z.string({message:"Symptom is required"}),
-    disease:z.string({message:"Disease is required"}),
-    recipe:z.string({message:"Recipe is required"}),
+    symptom:z.string({message:"Symptom is required"}).optional(),
+    disease:z.string({message:"Disease is required"}).optional(),
+    recipe:z.string({message:"Recipe is required"}).optional(),
     notes:z.string().optional(),
-    checkupDate:z.string({message:"Checkup Date is required"}),
+    checkupDate:z.string({message:"Checkup Date is required"}).optional(),
     patientId:z.instanceof(ObjectId,{message:"Patient Id is required"}),
     doctorId:z.instanceof(ObjectId,{message:"Doctor Id is required"}),
     createdAt:z.date().default(new Date()).optional(),
@@ -44,15 +44,28 @@ export default class Doctor {
         return doctors
     }
 
+    static async getByDoctorId(id:string){
+        const doctors - await this.collDoc.findOne()
+    }
+
     static async insertRecord(newRecord:RecordType){
         await RecordSchema.parseAsync(newRecord);
 
         const data = {
             ...newRecord,
-            status:"done"
         }
         data.createdAt = data.updatedAt = new Date();
         await this.collRec.insertOne(data)
+    }
+
+    static async updateRecord(updateRecord:RecordType){
+        
+        const data ={
+            ...updateRecord,
+            status:"done"
+        }
+        data.updatedAt = new Date();
+        await this.collRec.updateOne({_id:updateRecord._id}, {$set:data});
     }
 
     static async findByEmployeeId(id:string){
