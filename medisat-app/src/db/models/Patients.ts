@@ -2,6 +2,7 @@ import { z } from "zod";
 import { db } from "../config";
 import { hashPassword } from "@/helpers/bcrypt";
 import { PatientType } from "@/app/types";
+import { ObjectId } from "mongodb";
 
 const PatientSchema = z.object({
   nik: z.string().min(5),
@@ -12,8 +13,6 @@ const PatientSchema = z.object({
   address: z.string().min(5),
   phoneNumber: z.string().min(5),
 });
-
-// export type PatientType = z.infer<typeof PatientSchema>;
 
 class PatientModel {
   static collection() {
@@ -35,6 +34,45 @@ class PatientModel {
 
   static async findByEmail(email: string) {
     return await this.collection().findOne({ email });
+  }
+
+  static async getAllPatients(page: string | null, search: string | null) {
+    const limit = 8;
+    const currentPage = !page ? 1 : Number(page);
+    const skip = (currentPage - 1) * limit;
+    const arr = search?.split(" ").map((el) => ({
+      name: {
+        $regex: el,
+        $options: "si",
+      },
+    }));
+
+    const query = arr ? { $and: arr } : {};
+
+    const totalCount = await this.collection().countDocuments(query);
+    const totalPages = Math.ceil(totalCount / limit);
+
+    const patients = await this.collection()
+      .find(query)
+      .sort({ name: -1 })
+      .skip(skip)
+      .limit(limit)
+      .toArray();
+
+    return {
+      patients,
+      pagination: {
+        currentPage,
+        totalPages,
+        totalCount,
+        hasNextPage: currentPage < totalPages,
+        hasPrevPage: currentPage > 1,
+      },
+    };
+  }
+
+  static async getPatienstBySlug(slug: string) {
+    return await this.collection().find({ slug: slug }).next();
   }
 }
 
