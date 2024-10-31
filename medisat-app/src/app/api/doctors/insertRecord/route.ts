@@ -1,4 +1,5 @@
 import Doctor from "@/db/models/doctors";
+import RecordsModel from "@/db/models/Records";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -41,6 +42,6 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(id: string) {
-  const patient = await Doctor.getPatientsById(id);
+  const patient = await RecordsModel.getRecordByPatientId(id);
   if (!patient) throw { message: "Patient tidak terdaftar", status: 404 };
 }
