@@ -4,6 +4,7 @@ import { ObjectId } from "mongodb";
 import { z } from "zod";
 
 export const DoctorSchema = z.object({
+    _id: z.instanceof(ObjectId,{message:"Doctor Id is required"}),
     employeeId:z.string({message:"Employee Id is required"}),
     name:z.string({message:"Name is required"}),
     password:z.string({message:"Password is required"}),

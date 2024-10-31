@@ -14,10 +14,12 @@ export async function POST(request: NextRequest) {
     const {employeeId, password} = await request.json()
     try {
         LoginSchema.parse({employeeId, password})
-
+        // console.log("<<<<<<");
+        
         const doctor = await Doctor.findByEmployeeId(employeeId)
 
-        if (!doctor) {
+
+        if (!doctor?.employeeId) {
             throw{message:"Invalid Employee Id / Password", status:401}
         }
 

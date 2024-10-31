@@ -10,6 +10,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import Image from "next/image"
+const logo = require('../app/assets/MEDISAT.png')
 
 // Menu items.
 const items = [
@@ -45,7 +47,14 @@ export function SidebarDoctor() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Medisat</SidebarGroupLabel>
+          <SidebarGroupLabel>
+          <Image
+              src= {logo}
+              alt="MEDISAT Logo"
+              width={150}
+              height={50}
+            />
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
