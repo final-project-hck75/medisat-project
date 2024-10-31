@@ -3,12 +3,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
+import { register } from "../../actions";
 
 export default function Register(){
     return(
         <>
         <div className="p-10">
-        <form>
+        <form action={register}>
             <div className="grid w-full max-w-sm items-center gap-1.5 pb-5">
                 <Label htmlFor="nik">NIK</Label>
                 <Input type="nik" id="nik" name="nik" placeholder="1234567890123456" />
@@ -31,7 +32,7 @@ export default function Register(){
 
             <div className="grid w-full max-w-sm items-center gap-1.5 pb-5">
                 <Label htmlFor="birthdate">Tanggal Lahir</Label>
-                <Input type="text" id="birthdate" name="birthdate" placeholder="Masukkan tanggal lahir anda" />
+                <Input type="date" id="birthdate" name="birthdate" placeholder="Masukkan tanggal lahir anda" />
             </div>
 
             <div className="grid w-full max-w-sm items-center gap-1.5 pb-5">
@@ -41,7 +42,7 @@ export default function Register(){
 
             <div className="grid w-full max-w-sm items-center gap-1.5 pb-5">
                 <Label htmlFor="birthdate">No Hp</Label>
-                <Input type="text" id="birthdate" name="birthdate" placeholder="Masukkan nomor telpon yang dapat dihubungi" />
+                <Input type="text" id="phoneNumber" name="phoneNumber" placeholder="Masukkan nomor telpon yang dapat dihubungi" />
             </div>
 
             <div className="flex flex-wrap gap-10 items-center">

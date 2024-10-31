@@ -31,11 +31,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SidebarProvider>
-          <SidebarDoctor />
-
           {children}
-        </SidebarProvider>
       </body>
     </html>
   );

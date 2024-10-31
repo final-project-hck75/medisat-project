@@ -15,9 +15,9 @@ export async function POST(request: Request) {
 
     const payload = {
       _id: patient._id.toString(),
+      role : "patients"
     };
 
-    console.log(payload);
     const accessToken = signToken(payload);
     console.log(`Login Berhasil ${accessToken}`);
     cookies().set("Authorization", `Bearer ${accessToken}`);
