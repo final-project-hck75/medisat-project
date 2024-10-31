@@ -4,7 +4,7 @@ import { ObjectId } from "mongodb";
 import { z } from "zod";
 
 export const DoctorSchema = z.object({
-    _id: z.instanceof(ObjectId,{message:"Doctor Id is required"}),
+    _id: z.instanceof(ObjectId,{message:"Doctor Id is required"}).optional(),
     employeeId:z.string({message:"Employee Id is required"}),
     name:z.string({message:"Name is required"}),
     password:z.string({message:"Password is required"}),
@@ -34,8 +34,6 @@ export const RecordSchema = z.object({
 })
 
 export type RecordType = z.infer<typeof RecordSchema>
-
-
 export default class Doctor {
   static collDoc = db.collection<DoctorType>("doctors");
   static collRec = db.collection<RecordType>("records");
@@ -46,7 +44,9 @@ export default class Doctor {
   }
 
     static async getByDoctorId(id:string){
-        const doctors = await this.collDoc.findOne()
+      const doctorId = new ObjectId(id)
+      const doctor = await this.collDoc.findOne(doctorId);
+      return doctor
     }
 
     static async insertRecord(newRecord:RecordType){
