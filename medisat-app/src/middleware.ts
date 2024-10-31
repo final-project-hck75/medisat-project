@@ -1,64 +1,82 @@
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { verifyWithJose } from "./helpers/jwt";
-import { redirect } from "next/navigation";
 
 export async function middleware(request: NextRequest) {
-
-    const whiteList = ["/patients/auth/login",
+    const whiteList = [
+        "/patients/auth/login",
         "/patients/auth/register",
         "/doctors/auth/login",
         "/api/doctors/login",
         "/api/patients/login",
         "/api/patients/register"
-    ]
+    ];
 
-    if (whiteList.includes(request.nextUrl.pathname)) {
+    // Early return for whitelisted paths
+    if (whiteList.some(path => request.nextUrl.pathname.startsWith(path))) {
         return NextResponse.next();
-
     }
 
-    const authorization = cookies().get("Authorization")
-    // console.log(authorization, "author==========");
-    const isLogin = !!authorization;
+    // Get authorization from request cookies instead of server-side cookies
+    const authorization = request.cookies.get("Authorization");
 
-    if (request.nextUrl.pathname === "/doctors") {
-            if (!authorization) {
-                return NextResponse.redirect(new URL("/doctors/auth/login", request.url));
-            }
-        }
-    
-        if (request.nextUrl.pathname === "/doctors/auth/login") {
-            if (isLogin) {
-                return NextResponse.redirect(new URL("/doctors", request.url));
-            }
-        }
-
+    // Handle unauthenticated requests
     if (!authorization) {
+        // Special handling for doctors route
+        if (request.nextUrl.pathname.startsWith("/doctors")) {
+            return NextResponse.redirect(new URL("/doctors/auth/login", request.url));
+        }
+        
+        // For API routes, return 401
+        if (request.nextUrl.pathname.startsWith("/api")) {
+            return Response.json({ message: "Unauthorized" }, { status: 401 });
+        }
+
+        // For patient routes, redirect to login
+        if (request.nextUrl.pathname.startsWith("/patients")) {
+            return NextResponse.redirect(new URL("/patients/auth/login", request.url));
+        }
+
         return Response.json({ message: "Unauthorized" }, { status: 401 });
     }
+
+    // Verify token type
     const [type, token] = authorization.value.split(" ");
-
-    if (type !== "Bearer")
-        return Response.json({ message: "Unauthorized" }, { status: 401 });
-
-    const verifyJose = await verifyWithJose<{ _id: string }>(token);
-
-    if (request.nextUrl.pathname.startsWith("/doctors") && verifyJose.role !== "doctor") {
-        return NextResponse.redirect("/doctors/auth/login?unauthorized")
+    if (type !== "Bearer") {
+        return Response.json({ message: "Invalid token type" }, { status: 401 });
     }
 
-    if (request.nextUrl.pathname.startsWith("/patients") && verifyJose.role !== "patients") {
-        return NextResponse.redirect("/patients/auth/login?unauthorized")
+    try {
+        // Verify token and check roles
+        const verifyJose = await verifyWithJose<{ _id: string; role: string }>(token);
+
+        // Role-based access control
+        if (request.nextUrl.pathname.startsWith("/doctors") && verifyJose.role !== "doctor") {
+            return NextResponse.redirect(new URL("/doctors/auth/login?unauthorized", request.url));
+        }
+
+        if (request.nextUrl.pathname.startsWith("/patients") && verifyJose.role !== "patient") {
+            return NextResponse.redirect(new URL("/patients/auth/login?unauthorized", request.url));
+        }
+
+        // Add user ID to headers for downstream use
+        const requestHeaders = new Headers(request.headers);
+        requestHeaders.set("id", verifyJose._id);
+
+        return NextResponse.next({
+            request: {
+                headers: requestHeaders,
+            },
+        });
+    } catch (error) {
+        return Response.json({ message: "Invalid token" }, { status: 401 });
     }
-
-    const requestHeaders = new Headers(request.headers);
-    requestHeaders.set("doctorId", verifyJose._id);
-
-    const response = NextResponse.next({
-        request: {
-            headers: requestHeaders,
-        },
-    });
-    return response;
 }
+
+// Optionally configure paths that should trigger the middleware
+export const config = {
+    matcher: [
+        '/api/:path*',
+        '/doctors/:path*',
+        '/patients/:path*',
+    ]
+};
