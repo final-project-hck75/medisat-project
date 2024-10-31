@@ -1,44 +1,31 @@
 import Doctor from "@/db/models/doctors";
 import RecordsModel from "@/db/models/Records";
+import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
-    console.log(request);
 
+    const patientId = request.headers.get('patientId')!
+    
     const {
-      name,
-      bookDate,
-      status,
-      symptom,
-      disease,
-      recipe,
-      notes,
-      checkupDate,
-      patientId,
-      doctorId,
-    } = await request.json();
+         bookDate,
+         doctorId} = await request.json()
 
     await Doctor.insertRecord({
-      name,
-      bookDate,
-      status,
-      symptom,
-      disease,
-      recipe,
-      notes,
-      checkupDate,
-      patientId,
-      doctorId,
+         bookDate,
+         status:"booked",
+         patientId: new ObjectId(patientId),
+         doctorId:new ObjectId(doctorId)
     });
 
     return NextResponse.json(
-      { message: "Patient record saved" },
-      { status: 201 }
-    );
-  } catch (error) {
+        {message: "Schedule created successfully"},
+        {status:201}
+    )
+} catch (error) {
     console.log(error);
-  }
+}
 }
 
 export async function GET(id: string) {
