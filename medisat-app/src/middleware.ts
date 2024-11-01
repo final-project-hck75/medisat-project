@@ -1,50 +1,83 @@
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { verifyWithJose } from "./helpers/jwt";
-import { redirect } from "next/navigation";
 
 export async function middleware(request: NextRequest) {
-    const authorization = cookies().get("Authorization")
-    // console.log(authorization, "author==========");
-    
-    const isLogin = !!authorization;
+    const whiteList = [
+        "/patients/auth/login",
+        "/patients/auth/register",
+        "/doctors/auth/login",
+        "/api/doctors/login",
+        "/api/patients/login",
+        "/api/patients/register"
+    ];
 
-    if (request.nextUrl.pathname.startsWith("/api/doctors")) {
+    // Early return for whitelisted paths
+    if (whiteList.some(path => request.nextUrl.pathname.startsWith(path))) {
+        return NextResponse.next();
+    }
 
-        if (request.nextUrl.pathname.startsWith("/api/doctors/login")) {
-            return NextResponse.next();
+    // Get authorization from request cookies instead of server-side cookies
+    const authorization = request.cookies.get("Authorization");
+
+    // Handle unauthenticated requests
+    if (!authorization) {
+        // Special handling for doctors route
+        if (request.nextUrl.pathname.startsWith("/doctors")) {
+            return NextResponse.redirect(new URL("/doctors/auth/login", request.url));
+        }
+        
+        // For API routes, return 401
+        if (request.nextUrl.pathname.startsWith("/api")) {
+            return Response.json({ message: "Unauthorized" }, { status: 401 });
         }
 
-        if (!authorization)
-            return Response.json({ message: "Unauthorized" }, { status: 401 });
+        // For patient routes, redirect to login
+        if (request.nextUrl.pathname.startsWith("/patients")) {
+            return NextResponse.redirect(new URL("/patients/auth/login", request.url));
+        }
 
-        const [type, token] = authorization.value.split(" ");
+        return Response.json({ message: "Unauthorized" }, { status: 401 });
+    }
 
-        if (type !== "Bearer")
-            return Response.json({ message: "Unauthorized" }, { status: 401 });
+    // Verify token type
+    const [type, token] = authorization.value.split(" ");
+    if (type !== "Bearer") {
+        return Response.json({ message: "Invalid token type" }, { status: 401 });
+    }
 
-        const verifyJose = await verifyWithJose<{ _id: string }>(token);
+    try {
+        // Verify token and check roles
+        const verifyJose = await verifyWithJose<{ _id: string; role: string }>(token);
+
+        // Role-based access control
+        if (request.nextUrl.pathname.startsWith("/doctors") && verifyJose.role !== "doctor") {
+            return NextResponse.redirect(new URL("/doctors/auth/login?unauthorized", request.url));
+        }
+
+        if (request.nextUrl.pathname.startsWith("/patients") && verifyJose.role !== "patients") {
+            return NextResponse.redirect(new URL("/patients/auth/login?unauthorized", request.url));
+        }
+
+        // Add user ID to headers for downstream use
         const requestHeaders = new Headers(request.headers);
-        requestHeaders.set("doctorId", verifyJose._id);
+        requestHeaders.set("id", verifyJose._id);
+        requestHeaders.set("role", verifyJose.role);
 
-
-        const response = NextResponse.next({
+        return NextResponse.next({
             request: {
                 headers: requestHeaders,
             },
         });
-        return response;
-    }
-
-    if (request.nextUrl.pathname === "/doctors") {
-        if (!authorization) {
-            return NextResponse.redirect(new URL("/doctors/auth/login", request.url));
-        }
-    }
-
-    if (request.nextUrl.pathname === "/doctors/auth/login") {
-        if (isLogin) {
-            return NextResponse.redirect(new URL("/doctors", request.url));
-        }
+    } catch (error) {
+        return Response.json({ message: "Invalid token" }, { status: 401 });
     }
 }
+
+// Optionally configure paths that should trigger the middleware
+export const config = {
+    matcher: [
+        '/api/:path*',
+        '/doctors/:path*',
+        '/patients/:path*',
+    ]
+};

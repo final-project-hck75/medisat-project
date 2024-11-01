@@ -9,7 +9,7 @@ export async function login(formData: FormData) {
       password: formData.get("password"),
     };
 
-    console.log(body.email)
+    // console.log(body);
   
     const response = await fetch(process.env.NEXT_PUBLIC_BASE_URL + "/api/patients/login", {
       method: "POST",
@@ -43,7 +43,6 @@ export async function register(formData:FormData){
     phoneNumber : formData.get("phoneNumber"),
   }
 
-  console.log(body.nik)
   const response = await fetch(process.env.NEXT_PUBLIC_BASE_URL + "/api/patients/register",{
     method:"POST",
     body:JSON.stringify(body),
@@ -61,4 +60,9 @@ export async function register(formData:FormData){
   redirect("/patients/auth/login?alert=Account created successfully");
 
 
+}
+
+export const handleLogout = async () => {
+  cookies().delete("Authorization")
+  redirect("/patients/auth/login")
 }
