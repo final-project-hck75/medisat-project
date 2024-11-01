@@ -1,4 +1,4 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
+import { CalendarDays, Home, LogOut, NotepadText } from "lucide-react"
 
 import {
   Sidebar,
@@ -11,35 +11,31 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import Image from "next/image"
+import { handleLogout } from "@/app/patients/actions"
 const logo = require('../app/assets/MEDISAT.png')
 
 // Menu items.
 const items = [
   {
-    title: "Home",
+    title: "Beranda",
     url: "#",
     icon: Home,
   },
   {
-    title: "Inbox",
+    title: "Daftar Pasien",
     url: "#",
-    icon: Inbox,
+    icon: NotepadText,
   },
   {
-    title: "Calendar",
+    title: "Kalender",
     url: "#",
-    icon: Calendar,
+    icon: CalendarDays,
   },
   {
-    title: "Search",
+    title: "Keluar",
     url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  },
+    icon: LogOut
+  }
 ]
 
 export function SidebarDoctor() {
@@ -48,8 +44,8 @@ export function SidebarDoctor() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>
-          <Image
-              src= {logo}
+            <Image
+              src={logo}
               alt="MEDISAT Logo"
               width={150}
               height={50}
@@ -61,7 +57,7 @@ export function SidebarDoctor() {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <a href={item.url}>
-                      <item.icon />
+                      <item.icon color="#3e9392" />
                       <span>{item.title}</span>
                     </a>
                   </SidebarMenuButton>

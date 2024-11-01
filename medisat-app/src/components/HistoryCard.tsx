@@ -16,10 +16,7 @@ type CardProps = React.ComponentProps<typeof Card>
 
 export default function HistoryCard({ className, ...props }: CardProps) {
     return (
-        <div className="w-full bg-white rounded-lg shadow border p-6 dark:bg-gray-800 border-gray-200 overflow-y-scroll max-h-96">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white">
-                History
-            </h1>
+        <div className="w-full bg-white rounded-lg my-5 shadow border p-6 dark:bg-gray-800 border-emerald-500 overflow-y-scroll max-h-96">
             <div className="space-y-4 mt-4">
                 {[...Array(3)].map((_, index) => (
                     <div
