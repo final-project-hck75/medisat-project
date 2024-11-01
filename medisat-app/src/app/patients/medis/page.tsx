@@ -17,7 +17,7 @@ export default function () {
                     </form>
                 </div>
                 <div className="flex flex-wrap justify-center">
-                    <Link href={"/patients/schedule/"}>Antrian baru</Link>
+                    <Link href={"/patients/schedule/"} className="text-xl font-bold text-blue-500 hover:text-blue-700">Antrian baru</Link>
                 <Card/>
                 <Card/>
                 <Card/>

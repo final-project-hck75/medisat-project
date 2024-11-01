@@ -54,13 +54,14 @@ export async function middleware(request: NextRequest) {
             return NextResponse.redirect(new URL("/doctors/auth/login?unauthorized", request.url));
         }
 
-        if (request.nextUrl.pathname.startsWith("/patients") && verifyJose.role !== "patient") {
+        if (request.nextUrl.pathname.startsWith("/patients") && verifyJose.role !== "patients") {
             return NextResponse.redirect(new URL("/patients/auth/login?unauthorized", request.url));
         }
 
         // Add user ID to headers for downstream use
         const requestHeaders = new Headers(request.headers);
         requestHeaders.set("id", verifyJose._id);
+        requestHeaders.set("role", verifyJose.role);
 
         return NextResponse.next({
             request: {
