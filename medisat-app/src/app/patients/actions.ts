@@ -9,7 +9,6 @@ export async function login(formData: FormData) {
       password: formData.get("password"),
     };
 
-    // console.log(body);
   
     const response = await fetch(process.env.NEXT_PUBLIC_BASE_URL + "/api/patients/login", {
       method: "POST",
@@ -29,6 +28,7 @@ export async function login(formData: FormData) {
     }
   
     cookies().set("Authorization", `Bearer ${data.accessToken}`);
+
     redirect("/patients/medis");
   }
 
