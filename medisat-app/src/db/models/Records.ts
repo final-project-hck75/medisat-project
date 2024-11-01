@@ -59,7 +59,18 @@ class RecordsModel {
         },
       },
       {
+        $lookup: {
+          from: "doctors",
+          localField: "doctorId",
+          foreignField: "_id",
+          as: "doctor",
+        },
+      },
+      {
         $unwind: "$patient",
+      },
+      {
+        $unwind: "$doctor",
       },
       {
         $sort: { createdAt: -1 },
