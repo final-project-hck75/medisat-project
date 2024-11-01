@@ -35,7 +35,6 @@ export default function () {
         getRecord().then(setRecord)
     }, [])
 
-    console.log(record,"<<<<<")
     return (
         <>
             <div>
