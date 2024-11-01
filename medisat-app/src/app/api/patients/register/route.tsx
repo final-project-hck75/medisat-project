@@ -1,5 +1,7 @@
 import PatientModel from "@/db/models/Patients";
 
+// API POST LOGIN PATIENTS
+
 export async function POST(request: Request) {
   try {
     const { nik, name, email, password, birthDate, address, phoneNumber } =

@@ -3,6 +3,8 @@ import { comparePassword } from "@/helpers/bcrypt";
 import { signToken } from "@/helpers/jwt";
 import { cookies } from "next/headers";
 
+// API POST REGISTER PATIENTS
+
 export async function POST(request: Request) {
   try {
     const { email, password } = await request.json();
@@ -15,7 +17,7 @@ export async function POST(request: Request) {
 
     const payload = {
       _id: patient._id.toString(),
-      role : "patients"
+      role: "patients",
     };
 
     const accessToken = signToken(payload);
