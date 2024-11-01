@@ -2,6 +2,7 @@ import Doctor, { RecordType } from "@/db/models/doctors";
 import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
 
+// ? Untuk update record pasien
 export async function PUT(request: NextRequest, {params}:{params:{id:string}}) {
     try {
         const _id = new ObjectId(params.id);

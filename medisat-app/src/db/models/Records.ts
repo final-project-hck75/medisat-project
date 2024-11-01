@@ -18,23 +18,41 @@ class RecordsModel {
     return record;
   }
 
-  static async getRecordByDoctorIdToday(params: RecordTypeToday) {
-    const { doctorId } = params;
-
+  static async getRecordByDoctorIdToday(doctorId:string) {
+    
+    console.log(doctorId, "ini di models ");
     const today = new Date();
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, "0");
     const date = String(today.getDate()).padStart(2, "0");
-    const formattedDate = `${year}/${month}/${date}`;
+    const formattedDate = `${year}-${month}-${date}`;
     const pipeline = [
+  {
+    $match:
       {
-        $match: {
-          doctorId: new ObjectId(doctorId),
-          status: "booked",
-          bookDate: formattedDate,
-        },
+        doctorId: new ObjectId(
+          "6720bc3261211869139bec9d"
+        ),
+        status: "booked",
+        bookDate: "2024-11-01",
       },
-    ];
+  },
+  {
+    $lookup:
+      {
+        from: "patients",
+        localField: "patientId",
+        foreignField: "_id",
+        as: "patient",
+      },
+  },
+  {
+    $unwind:
+      {
+        path: "$patient",
+      },
+  }
+]
     const records = await this.collection().aggregate(pipeline).toArray();
     return records;
   }
