@@ -1,11 +1,6 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea"
-
 import React from "react";
-import RekamMedis from "../../../components/RekamMedisCard";
-import HistoryCard from "../../../components/HistoryCard";
+import RekamMedis from "../../../../components/RekamMedisCard";
+import HistoryCard from "../../../../components/HistoryCard";
 
 export default function Records() {
     return (
