@@ -1,7 +1,7 @@
 import Doctor from "@/db/models/doctors";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export async function GET(request: NextRequest, {params}:{params:{id:string}}) {
+export async function GET() {
     try {
         const doctors = await Doctor.getAll()
         return NextResponse.json(doctors, {status:200})
