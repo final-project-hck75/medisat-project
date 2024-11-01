@@ -93,7 +93,7 @@ export async function handleSchedule(formData: FormData) {
     // Kirim ke API
 
     const response = await fetch(
-      process.env.NEXT_PUBLIC_BASE_URL + "/api/doctors/insertRecord",
+      process.env.NEXT_PUBLIC_BASE_URL + "/api/patients/insertRecord",
       {
         method: "POST",
         headers: {
