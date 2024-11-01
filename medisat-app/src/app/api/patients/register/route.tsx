@@ -1,7 +1,9 @@
 import PatientModel from "@/db/models/Patients";
 import { NextRequest } from "next/server";
 
-export async function POST(request: NextRequest) {
+// API POST LOGIN PATIENTS
+
+export async function POST(request: Request) {
   try {
     const { nik, name, email, password, birthDate, address, phoneNumber } =
       await request.json();
