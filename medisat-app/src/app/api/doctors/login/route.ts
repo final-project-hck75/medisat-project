@@ -28,7 +28,8 @@ export async function POST(request: NextRequest) {
         }
 
         const payload = {
-            _id: doctor._id.toString()
+            _id: doctor._id.toString(),
+            role: "doctor"
         }
 
         const access_token = jwt.sign(payload, process.env.JWT_SECMEDI)
