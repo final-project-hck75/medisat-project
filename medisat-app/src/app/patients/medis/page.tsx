@@ -8,7 +8,7 @@ import { RecordType } from "@/app/types";
 import { useEffect, useState } from "react";
 
 
-export default function () {
+export default function Medis () {
 
     const [record, setRecord] = useState<RecordType[]>([]);
     async function getRecord(){

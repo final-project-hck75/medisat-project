@@ -17,7 +17,7 @@ export default function Register(){
 
             <div className="grid w-full max-w-sm items-center gap-1.5 pb-5">
                 <Label htmlFor="nama">Nama</Label>
-                <Input type="text" id="nama" name="nama" placeholder="Masukkan Nama anda" />
+                <Input type="text" id="nama" name="name" placeholder="Masukkan Nama anda" />
             </div>
 
             <div className="grid w-full max-w-sm items-center gap-1.5 pb-5">
@@ -32,7 +32,7 @@ export default function Register(){
 
             <div className="grid w-full max-w-sm items-center gap-1.5 pb-5">
                 <Label htmlFor="birthdate">Tanggal Lahir</Label>
-                <Input type="date" id="birthdate" name="birthdate" placeholder="Masukkan tanggal lahir anda" />
+                <Input type="date" id="birthDate" name="birthDate" placeholder="Masukkan tanggal lahir anda" />
             </div>
 
             <div className="grid w-full max-w-sm items-center gap-1.5 pb-5">

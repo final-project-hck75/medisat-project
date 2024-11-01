@@ -36,3 +36,24 @@ export type RecordType = {
     updatedAt?: Date | string;
     notes?: string | undefined;
 }
+
+// Add these to your existing types.ts file
+
+export interface AppointmentData {
+  doctorId: string;
+  appointmentDate: string; // ISO date string
+  timeRange: string;
+  // Add any other fields your API requires
+}
+
+export interface AppointmentResponse {
+  success: boolean;
+  message: string;
+  data?: {
+      id: string;
+      doctorId: string;
+      appointmentDate: string;
+      timeRange: string;
+      // Add other fields that your API returns
+  };
+}

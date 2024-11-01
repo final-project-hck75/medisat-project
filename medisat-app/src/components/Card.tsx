@@ -38,7 +38,7 @@ export default function Card({el}:{el:RecordType}) {
                     <div>
                         <div className="p-3">
                             <p className="text-sm text-gray-500">Resep Obat</p>
-                            <p className="text-emerald-700">Obat 1</p>
+                            <p className="text-emerald-700">{el.recipe}</p>
                         </div>
                     </div>
 

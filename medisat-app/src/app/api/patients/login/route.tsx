@@ -19,7 +19,6 @@ export async function POST(request: Request) {
     };
 
     const accessToken = signToken(payload);
-    console.log(`Login Berhasil ${accessToken}`);
     cookies().set("Authorization", `Bearer ${accessToken}`);
 
     return Response.json({ accessToken });

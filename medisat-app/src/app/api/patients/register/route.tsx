@@ -1,6 +1,7 @@
 import PatientModel from "@/db/models/Patients";
+import { NextRequest } from "next/server";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const { nik, name, email, password, birthDate, address, phoneNumber } =
       await request.json();
@@ -13,7 +14,7 @@ export async function POST(request: Request) {
       address,
       phoneNumber,
     });
-
+    // console.log(password, "PASSWORD")
     return Response.json(
       { message: "Patient created successfully" },
       { status: 201 }

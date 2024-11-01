@@ -6,12 +6,13 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
   try {
 
-    const patientId = request.headers.get('patientId')!
+    const patientId = request.headers.get('id')!
     
     const {
          bookDate,
          doctorId} = await request.json()
 
+    // console.log(bookDate, doctorId, "BOOK DATE")
     await Doctor.insertRecord({
          bookDate,
          status:"booked",
