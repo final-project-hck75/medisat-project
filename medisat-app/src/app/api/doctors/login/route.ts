@@ -10,12 +10,11 @@ const LoginSchema = DoctorSchema.pick({
     password:true
 })
 
-export async function POST(request: NextRequest) {
+//? Untuk Login Dokter
+export async function POST(request: NextRequest) { 
     const {employeeId, password} = await request.json()
     try {
         LoginSchema.parse({employeeId, password})
-        // console.log("<<<<<<");
-        
         const doctor = await Doctor.findByEmployeeId(employeeId)
 
 

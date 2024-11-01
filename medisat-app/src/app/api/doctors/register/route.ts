@@ -2,7 +2,7 @@ import Doctor from "@/db/models/doctors";
 import { NextRequest, NextResponse } from "next/server";
 
 
-
+//? Untuk registrasi dokter
 export async function POST(request: NextRequest) {
     try {
         const {employeeId, name, password, image, phoneNumber, polyclinic, schedule} = await request.json()
