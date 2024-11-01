@@ -1,10 +1,41 @@
+"use client"
+
 import Card from "@/components/Card";
-import Sidebar from "@/components/Sidebar";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { handleLogout } from "../actions";
+import { RecordType } from "@/app/types";
+import { useEffect, useState } from "react";
+
 
 export default function () {
+
+    const [record, setRecord] = useState<RecordType[]>([]);
+    async function getRecord(){
+        const records = await fetch(process.env.NEXT_PUBLIC_BASE_URL + "/api/patients/records",{
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("token")}`
+            },
+            cache: "no-store"
+        })
+
+        // console.log(records,"<<<<<")
+
+        if (!records.ok) {
+            throw new Error(`API Request failed : ${records.status}`);
+        }
+
+        const response = await records.json();
+
+        return response
+    }
+
+    useEffect(() => {
+        getRecord().then(setRecord)
+    }, [])
+
+    console.log(record,"<<<<<")
     return (
         <>
             <div>
@@ -18,11 +49,9 @@ export default function () {
                 </div>
                 <div className="flex flex-wrap justify-center">
                     <Link href={"/patients/schedule/"} className="text-xl font-bold text-blue-500 hover:text-blue-700">Antrian baru</Link>
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
+                {record.map(el=>(
+                    <Card el={el} key={el._id} />
+                ))}
 
                 </div>
             </div>

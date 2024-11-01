@@ -1,16 +1,20 @@
-export default function Card() {
+import { RecordType } from "@/app/types";
+
+export default function Card({el}:{el:RecordType}) {
+    
+
     return (
         <>
             <div className="bg-white rounded-xl border border-solid border-emerald-800 p-3 my-2">
                 <div className="flex flex-wrap justify-between ">
                     <div className="p-3 w-1/3">
                         <p className="text-sm text-gray-500">Status</p>
-                        <p className="text-emerald-700">Booked</p>
+                        <p className="text-emerald-700">{el.status}</p>
 
                     </div>
                     <div className="p-3 w-2/3 flex flex-wrap justify-end">
                         <p className="text-sm text-gray-500">Tanggal Pemeriksaan</p>
-                        <p className="text-emerald-700">10/10/2024</p>
+                        <p className="text-emerald-700">{el.bookDate}</p>
 
                     </div>
                 </div>
@@ -18,17 +22,17 @@ export default function Card() {
                     <div>
                         <div className="p-3">
                             <p className="text-sm text-gray-500">Penyakit yang diderita</p>
-                            <p className="text-emerald-700">Demam</p>
+                            <p className="text-emerald-700">{el.disease}</p>
 
                         </div>
                         <div className="p-3">
                             <p className="text-sm text-gray-500">Keluhan</p>
-                            <p className="text-emerald-700">Meriang</p>
+                            <p className="text-emerald-700">{el.symptom}</p>
 
                         </div>
                         <div className="p-3">
                             <p className="text-sm text-gray-500">Dokter yang menangani</p>
-                            <p className="text-emerald-700">Dr. Abdul Hamid</p>
+                            <p className="text-emerald-700">{}</p>
                         </div>
                     </div>
                     <div>

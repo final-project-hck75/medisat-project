@@ -15,8 +15,6 @@ class RecordsModel {
     const record = await this.collection()
       .find({ patientId: new ObjectId(patientId) })
       .toArray();
-    // const record = await this.collection().aggregate(pipeline).toArray();
-    // console.log("REDOCRS");
     return record;
   }
 
