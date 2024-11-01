@@ -19,6 +19,8 @@ export async function middleware(request: NextRequest) {
     // Get authorization from request cookies instead of server-side cookies
     const authorization = request.cookies.get("Authorization");
 
+    console.log(authorization, "authorization middleware ==========");
+    
     // Handle unauthenticated requests
     if (!authorization) {
         // Special handling for doctors route

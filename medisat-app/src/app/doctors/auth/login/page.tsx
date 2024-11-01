@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { ChangeEvent, FormEvent, useState } from "react";
 import Swal from 'sweetalert2'
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
+import { login } from "../../actions"
 
 
 export default function Login() {
@@ -32,11 +33,16 @@ export default function Login() {
             })
             // console.log(res, "ini res");
             const data = await res.json();
-            // console.log(data, "ini data=======");
+            console.log(data, "ini data=======");
+
+            // console.log(data, "ini data token login=====");
+            
 
             if (!res.ok) {
-                throw data
+                redirect("/doctors/auth/login")
             }
+
+            login(data.access_token)
 
             Swal.fire(
                 {

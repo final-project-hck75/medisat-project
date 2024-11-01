@@ -1,5 +1,4 @@
 import Doctor from "@/db/models/doctors";
-import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
 
 
