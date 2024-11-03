@@ -1,4 +1,3 @@
-
 // const { MongoClient, ServerApiVersion } = require('mongodb');
 import { MongoClient, ServerApiVersion } from "mongodb";
 
@@ -14,3 +13,4 @@ const client = new MongoClient(uri, {
 });
 
 export const db = client.db("medisat-db");
+

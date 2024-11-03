@@ -35,19 +35,19 @@ export default function Schedule() {
             <div className="w-full flex flex-wrap justify-center py-5">
                 <Label className="text-xl font-bold">JADWAL DOKTER PRAKTEK</Label>
             </div>
-            <form action={handleSchedule}>
-                <RadioGroup name="doctor" id="doctor" className="space-y-4">
-                    {schedule.map(el => (
+            {schedule.map(el => (
+                <form action={handleSchedule} className="my-3">
+                    {/* <input type="text" name="doctorId" value={el._id} /> */}
                         <div key={el._id} className="flex flex-wrap justify-between bg-emerald-50 rounded-xl p-5">
                             <div className="flex items-start space-x-4 w-full">
-                                <RadioGroupItem value={el._id} id={el._id} />
+                                {/* <RadioGroupItem value={el._id} id={el._id} /> */}
                                 <div className="flex-1">
-                                    <CardSchedule el={el} />
+                                    <CardSchedule key={el._id} el={el} />
                                 </div>
                             </div>
                             <div className="w-full flex justify-end mt-4">
-                                <Button 
-                                    type="submit" 
+                                <Button
+                                    type="submit"
                                     variant="ghost"
                                     className="text-blue-600 hover:text-xl hover:text-blue-600 rounded-xl"
                                 >
@@ -55,9 +55,8 @@ export default function Schedule() {
                                 </Button>
                             </div>
                         </div>
-                    ))}
-                </RadioGroup>
-            </form>
+                </form>
+            ))}
         </div>
     );
 }

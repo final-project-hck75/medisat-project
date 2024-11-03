@@ -20,11 +20,13 @@ export async function login(formData: FormData) {
       },
     }
   );
-
+  
   const data = (await response.json()) as {
     accessToken?: string;
     message?: string;
   };
+  
+  console.log(data)
 
   if (!response.ok) {
     redirect("/patients/auth/login");
@@ -32,7 +34,7 @@ export async function login(formData: FormData) {
 
   cookies().set("Authorization", `Bearer ${data.accessToken}`);
 
-  redirect("/patients/medis");
+  redirect("/patients/medic");
 }
 
 export async function register(formData: FormData) {
@@ -53,6 +55,7 @@ export async function register(formData: FormData) {
       body: JSON.stringify(body),
       headers: {
         "Content-Type": "application/json",
+        Cookie: cookies().toString(),
       },
     }
   );
@@ -73,21 +76,25 @@ export const handleLogout = async () => {
 };
 
 export async function handleSchedule(formData: FormData) {
-  try {
     // Get form data
-    const doctorId = formData.get("doctor");
-    const formattedSchedule = formData.get("formattedSchedule");
+    const doctorId = formData.get("doctorId");
     const appointmentDate = formData.get("appointmentDate");
     const timeRange = formData.get("timeRange");
 
-    if (!doctorId || !formattedSchedule || !appointmentDate || !timeRange) {
+    console.log({doctorId, appointmentDate, timeRange}, "form data")
+
+    if (!doctorId || !appointmentDate || !timeRange) {
+      console.log(doctorId)
+      console.log(appointmentDate)
+      console.log(timeRange)
       throw new Error("Missing required fields");
     }
 
     // Format untuk API
     const appointmentData = {
       doctorId: doctorId.toString(),
-      bookDate: formattedSchedule.toString(),
+      bookDate: appointmentDate.toString(),
+      timeRange: timeRange.toString(),
     };
 
     // Kirim ke API
@@ -115,8 +122,37 @@ export async function handleSchedule(formData: FormData) {
     // Revalidate dan redirect
     revalidatePath("/patients/medis");
     redirect("/patients/medis");
+  
+}
+
+export const handlePayment = async (formData: FormData) => {
+  try {
+    const body = {
+      _id: formData.get("id")
+    }
+
+    console.log(body, "body");
+
+    const response = await fetch("http://localhost:3000/api/payments", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: cookies().toString(),
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Server response:', errorText);
+      throw new Error(`Payment failed with status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log(data, "DATA");
+    return data;
   } catch (error) {
-    console.error("Schedule error:", error);
+    console.error('Payment processing error:', error);
     throw error;
   }
 }

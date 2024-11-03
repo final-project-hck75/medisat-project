@@ -18,11 +18,13 @@ export default function CardSchedule({el}:{el:DoctorType}) {
         }
     }, [el.schedule]);
 
+    // console.log(new Date().getDate()+15, "<<<<<")
+
     const getNextTwoWeeksDates = (targetDay: string) => {
         const dates: Date[] = [];
         const today = new Date();
         const twoWeeksFromNow = new Date(today);
-        twoWeeksFromNow.setDate(today.getDate() + 14);
+        twoWeeksFromNow.setDate(today.getDate() + 15);
 
         let currentDate = new Date(today);
         
@@ -31,7 +33,7 @@ export default function CardSchedule({el}:{el:DoctorType}) {
             if (dayName === targetDay) {
                 dates.push(new Date(currentDate));
             }
-            currentDate.setDate(currentDate.getDate() + 1);
+            currentDate.setDate(currentDate.getDate()+1);
         }
 
         return dates;
@@ -55,19 +57,22 @@ export default function CardSchedule({el}:{el:DoctorType}) {
         setSelectedSchedule(timeRange);
         
         if (selectedDate) {
-            const date = new Date(selectedDate);
+            const date = new Date(selectedDate +1);
+            console.log(date, "<<<<<")
             const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
             setFormattedSchedule(`${dayName}, ${timeRange}`);
         }
     };
 
+    // console.log(selectedDate, "<<<<<")
     const handleDateSelect = (dateValue: string) => {
+        console.log(dateValue, "<<<<<")
         setSelectedDate(dateValue);
         
         if (selectedSchedule) {
             const date = new Date(dateValue);
             const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
-            setFormattedSchedule(`${dayName}, ${selectedSchedule}`);
+            setFormattedSchedule(`${date}`);
         }
     };
 

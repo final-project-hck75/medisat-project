@@ -1,7 +1,7 @@
 import PatientModel from "@/db/models/Patients";
 import { NextRequest } from "next/server";
 
-// API POST LOGIN PATIENTS
+// API POST REGISTER PATIENTS
 
 export async function POST(request: Request) {
   try {

@@ -30,15 +30,19 @@ export async function middleware(request: NextRequest) {
         
         // For API routes, return 401
         if (request.nextUrl.pathname.startsWith("/api")) {
-            return Response.json({ message: "Unauthorized" }, { status: 401 });
+            return Response.json({ message: "Unauthorized middleware API" }, { status: 401 });
         }
 
         // For patient routes, redirect to login
         if (request.nextUrl.pathname.startsWith("/patients")) {
             return NextResponse.redirect(new URL("/patients/auth/login", request.url));
         }
+        
+        if (request.nextUrl.pathname.startsWith("/payments")) {
+            return NextResponse.redirect(new URL("/patients/auth/login", request.url));
+        }
 
-        return Response.json({ message: "Unauthorized" }, { status: 401 });
+        return Response.json({ message: "Unauthorized middleware" }, { status: 401 });
     }
 
     // Verify token type
@@ -60,6 +64,10 @@ export async function middleware(request: NextRequest) {
             return NextResponse.redirect(new URL("/patients/auth/login?unauthorized", request.url));
         }
 
+        if (request.nextUrl.pathname.startsWith("/payments") && verifyJose.role !== "patients") {
+            return NextResponse.redirect(new URL("/patients/auth/login?unauthorized", request.url));
+        }
+
         // Add user ID to headers for downstream use
         const requestHeaders = new Headers(request.headers);
         requestHeaders.set("id", verifyJose._id);
@@ -71,7 +79,7 @@ export async function middleware(request: NextRequest) {
             },
         });
     } catch (error) {
-        return Response.json({ message: "Invalid token" }, { status: 401 });
+        return Response.json({ message: "Invalid token ERROR MIDDLEWARE" }, { status: 401 });
     }
 }
 
@@ -81,5 +89,6 @@ export const config = {
         '/api/:path*',
         '/doctors/:path*',
         '/patients/:path*',
+        '/payments/:path*',
     ]
 };

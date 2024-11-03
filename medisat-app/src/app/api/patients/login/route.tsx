@@ -3,11 +3,12 @@ import { comparePassword } from "@/helpers/bcrypt";
 import { signToken } from "@/helpers/jwt";
 import { cookies } from "next/headers";
 
-// API POST REGISTER PATIENTS
+// API POST LOGIN PATIENTS
 
 export async function POST(request: Request) {
   try {
     const { email, password } = await request.json();
+
     const patient = await PatientModel.findByEmail(email);
     if (!patient) throw { message: "Invalid Email/Password", status: 400 };
 
@@ -17,9 +18,9 @@ export async function POST(request: Request) {
 
     const payload = {
       _id: patient._id.toString(),
-      role: "patients",
-    };
-
+      role: "patients"
+    }
+    
     const accessToken = signToken(payload);
     cookies().set("Authorization", `Bearer ${accessToken}`);
 

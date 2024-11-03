@@ -19,8 +19,7 @@ export default function Medis () {
             },
             cache: "no-store"
         })
-
-        // console.log(records,"<<<<<")
+        
 
         if (!records.ok) {
             throw new Error(`API Request failed : ${records.status}`);

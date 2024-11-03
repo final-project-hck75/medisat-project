@@ -25,6 +25,7 @@ export type RecordType = {
     _id:string
     name: string;
     status: string;
+    price: number;
     bookDate: string;
     symptom: string;
     disease: string;
