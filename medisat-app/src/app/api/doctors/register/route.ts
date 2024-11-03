@@ -1,5 +1,7 @@
 import Doctor from "@/db/models/doctors";
+import PatientMail from "@/helpers/mail";
 import { NextRequest, NextResponse } from "next/server";
+
 
 
 //? Untuk registrasi dokter
@@ -9,8 +11,7 @@ export async function POST(request: NextRequest) {
 
         await Doctor.newDoctor({
             employeeId, name, password, image, phoneNumber, polyclinic, schedule
-        })
-
+        })    
         return NextResponse.json(
             {message:"Doctor registered"},
             {status:201}
