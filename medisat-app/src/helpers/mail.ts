@@ -19,7 +19,7 @@ export default async function PatientMail(params:paramsType) {
     
         const info = await transporter.sendMail({
         from: process.env.MEDISAT_EMAIL, // sender address
-        to: "pramaskoro@gmail.com", // list of receivers
+        to: email, // list of receivers
         subject: "Registrasi", // Subject line
         text: "Registrasi", // plain text body
         html: `
@@ -92,14 +92,14 @@ export default async function PatientMail(params:paramsType) {
             <p>Sekian untuk informasinya,<br>Terima Kasih</p>
         </div>
         <div class="footer">
-            <p>&copy; 2024 Medisat</p>
-            <p><a href="#">Unsubscribe</a> | <a href="#">Contact Us</a></p>
+            <p>&copy; Medisat 2024</p>
         </div>
     </div>
 </body>
 
 </html>`, // html body
       });
+
     //   console.log("Message sent: %s", info.messageId)
 }
 
