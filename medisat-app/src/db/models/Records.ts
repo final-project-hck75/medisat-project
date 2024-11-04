@@ -2,11 +2,6 @@ import { ObjectId } from "mongodb";
 import { db } from "../config";
 import { z } from "zod";
 
-type RecordTypeToday = {
-  doctorId: string;
-  bookDate: string;
-};
-
 export const RecordSchema = z.object({
     _id : z.instanceof(ObjectId).optional(),
     bookDate:z.string({message:"Book Date is required"}),
