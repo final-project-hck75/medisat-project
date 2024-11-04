@@ -26,7 +26,6 @@ export const RecordSchema = z.object({
     disease:z.string({message:"Disease is required"}).optional(),
     recipe:z.string({message:"Recipe is required"}).optional(),
     notes:z.string().optional(),
-    checkupDate:z.string({message:"Checkup Date is required"}).optional(),
     patientId:z.instanceof(ObjectId,{message:"Patient Id is required"}),
     doctorId:z.instanceof(ObjectId,{message:"Doctor Id is required"}),
     createdAt:z.date().default(new Date()).optional(),
@@ -57,7 +56,7 @@ export default class Doctor {
         }
         data.createdAt = data.updatedAt = new Date();
         
-        // await this.collRec.insertOne(data)
+        await this.collRec.insertOne(data)
     }
 
     static async updateRecord(updateRecord:RecordType){
