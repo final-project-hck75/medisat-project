@@ -4,10 +4,18 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
 import { register } from "../../actions";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import Alert from "@/components/Alert";
 
 export default function Register(){
+
+    const Cookie = cookies().get("Authorization")?.value;
+
+    if (Cookie) redirect("/patients/medic")
     return(
         <>
+        <Alert/>
         <div className="p-10">
         <form action={register}>
             <div className="grid w-full max-w-sm items-center gap-1.5 pb-5">

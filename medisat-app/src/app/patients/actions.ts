@@ -18,6 +18,14 @@ export async function login(formData: FormData) {
     password: formData.get("password"),
   };
 
+  if(!body.email) {
+    redirect("/patients/auth/login?alert=Email tidak boleh kosong")
+  }
+
+  if(!body.password) {
+    redirect("/patients/auth/login?alert=Password tidak boleh kosong")
+  }
+
   const response = await fetch(
     process.env.NEXT_PUBLIC_BASE_URL + "/api/patients/login",
     {
@@ -35,12 +43,12 @@ export async function login(formData: FormData) {
   };
   
   if (!response.ok) {
-    redirect("/patients/auth/login");
+    redirect(`/patients/auth/login?alert=${data.message}`);
   }
 
   cookies().set("Authorization", `Bearer ${data.accessToken}`);
 
-  redirect("/patients/medic");
+  redirect("/patients/");
 }
 
 export async function register(formData: FormData) {
@@ -53,6 +61,35 @@ export async function register(formData: FormData) {
     address: formData.get("address"),
     phoneNumber: formData.get("phoneNumber"),
   };
+
+  if(!body.email) {
+    redirect("/patients/auth/register?alert=Email tidak boleh kosong")
+  }
+
+  if(!body.password) {
+    redirect("/patients/auth/register?alert=Password tidak boleh kosong")
+  }
+
+  if(!body.name) {
+    redirect("/patients/auth/register?alert=Nama tidak boleh kosong")
+  }
+
+  if(!body.nik) {
+    redirect("/patients/auth/register?alert=NIK tidak boleh kosong")
+  }
+
+  if(!body.birthDate) {
+    redirect("/patients/auth/register?alert=Tanggal lahir tidak boleh kosong")
+  }
+
+  if(!body.address) {
+    redirect("/patients/auth/register?alert=Alamat tidak boleh kosong")
+  }
+
+  if(!body.phoneNumber) {
+    redirect("/patients/auth/register?alert=Nomor telepon tidak boleh kosong")
+  }
+
 
   const response = await fetch(
     process.env.NEXT_PUBLIC_BASE_URL + "/api/patients/register",
@@ -70,7 +107,7 @@ export async function register(formData: FormData) {
   await response.json();
 
   if (!response.ok) {
-    redirect("/patients/auth/register");
+    redirect("/patients/auth/register?alert=Email sudah terdaftar");
   }
 
   redirect("/patients/auth/login?alert=Account created successfully");
@@ -87,20 +124,23 @@ export async function handleSchedule(formData: FormData) {
     const appointmentDate = formData.get("appointmentDate");
     const timeRange = formData.get("timeRange");
 
-    console.log({doctorId, appointmentDate, timeRange}, "form data")
+    if(!doctorId) {
+      redirect("/patients/schedule?alert=Undefined")
+    }
 
-    if (!doctorId || !appointmentDate || !timeRange) {
-      console.log(doctorId)
-      console.log(appointmentDate)
-      console.log(timeRange)
-      throw new Error("Missing required fields");
+    if(!timeRange) {
+      redirect("/patients/schedule?alert=Mohon untuk memilih jadwal terlebih dahulu")
+    }
+
+    if(!appointmentDate) {
+      redirect("/patients/schedule?alert=Mohon untuk memilih tanggal terlebih dahulu")
     }
 
     // Format untuk API
-    const appointmentData = {
+    const body = {
       doctorId: doctorId.toString(),
       bookDate: appointmentDate.toString(),
-      timeRange: timeRange.toString(),
+      schedule: timeRange.toString(),
     };
 
     // Kirim ke API
@@ -112,7 +152,7 @@ export async function handleSchedule(formData: FormData) {
         headers: {
           Cookie: cookies().toString(),
         },
-        body: JSON.stringify(appointmentData),
+        body: JSON.stringify(body),
       }
     );
 
@@ -124,8 +164,8 @@ export async function handleSchedule(formData: FormData) {
     const data = await response.json();
 
     // Revalidate dan redirect
-    revalidatePath("/patients/medis");
-    redirect("/patients/medis");
+    revalidatePath("/patients/medic");
+    redirect("/patients/medic");
   
 }
 

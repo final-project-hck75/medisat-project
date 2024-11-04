@@ -1,15 +1,15 @@
-import { handleSchedule } from "@/app/patients/actions";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { DoctorType } from "@/app/types";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { Calendar } from "lucide-react";
+import formatDate from "@/helpers/formatDate";
 
-export default function CardSchedule({el}:{el:DoctorType}) {
-    const [selectedDate, setSelectedDate] = useState('');
+export default function CardSchedule({el, active, setActive}:{el:DoctorType, active:string, setActive: Dispatch<SetStateAction<string>>}) {
+    const [selectedDate, setSelectedDate] = useState(''); //2024-11-05
     const [availableDates, setAvailableDates] = useState<Date[]>([]);
-    const [selectedSchedule, setSelectedSchedule] = useState('');
-    const [formattedSchedule, setFormattedSchedule] = useState('');
+    const [selectedSchedule, setSelectedSchedule] = useState(''); //09.00 - 12.00
+    const [formattedSchedule, setFormattedSchedule] = useState(''); //GMT +7
 
     useEffect(() => {
         if (el.schedule && el.schedule.length > 0) {
@@ -17,6 +17,14 @@ export default function CardSchedule({el}:{el:DoctorType}) {
             setAvailableDates(getNextTwoWeeksDates(firstDay));
         }
     }, [el.schedule]);
+
+    useEffect(() => {
+        if (active !== el._id) {
+            setSelectedDate('')
+            setSelectedSchedule('')
+            setFormattedSchedule('')
+        }
+    }, [active, el._id, setActive, setSelectedDate, setSelectedSchedule]);
 
     // console.log(new Date().getDate()+15, "<<<<<")
 
@@ -53,28 +61,22 @@ export default function CardSchedule({el}:{el:DoctorType}) {
     };
 
     const handleScheduleSelect = (schedule: string) => {
+        if (active !== el._id) setActive(el._id);
+        
+        
         const [day, timeRange] = schedule.split(", ");
         setSelectedSchedule(timeRange);
-        
-        if (selectedDate) {
-            const date = new Date(selectedDate +1);
-            console.log(date, "<<<<<")
-            const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
-            setFormattedSchedule(`${dayName}, ${timeRange}`);
-        }
     };
 
     // console.log(selectedDate, "<<<<<")
     const handleDateSelect = (dateValue: string) => {
-        console.log(dateValue, "<<<<<")
         setSelectedDate(dateValue);
         
-        if (selectedSchedule) {
-            const date = new Date(dateValue);
-            const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
-            setFormattedSchedule(`${date}`);
-        }
     };
+
+    useEffect(() => {
+        setFormattedSchedule(`${selectedDate? formatDate(selectedDate) : selectedDate} ${selectedSchedule}`);
+    }, [selectedDate, selectedSchedule])
 
     return (
         <div className="w-full flex flex-wrap">
@@ -121,7 +123,7 @@ export default function CardSchedule({el}:{el:DoctorType}) {
                                 onChange={(e) => handleDateSelect(e.target.value)}
                                 required
                             >
-                                <option value="">Pilih tanggal</option>
+                                <option value="" className="text-xs">Pilih tanggal</option>
                                 {availableDates.map((date) => (
                                     <option key={date.toISOString()} value={formatDateForValue(date)}>
                                         {formatDateForDisplay(date)}
@@ -136,13 +138,14 @@ export default function CardSchedule({el}:{el:DoctorType}) {
                 )}
                 
                 {/* Hidden inputs for form submission */}
-                <input type="hidden" name="formattedSchedule" value={formattedSchedule} />
+                <input type="hidden" name="doctorId" value={el._id} />
+                <input type="hidden" name="selectedDate" value={selectedDate} />
                 <input type="hidden" name="timeRange" value={selectedSchedule} />
                 
-                {formattedSchedule && (
+                {selectedDate && (
                     <div className="w-full mt-4 p-3 bg-blue-50 rounded-lg">
-                        <Label className="block mb-2">Jadwal yang Dipilih:</Label>
-                        <p className="text-blue-800 font-medium">{formattedSchedule}</p>
+                        <Label className="block mb-2 text-xs">Jadwal yang Dipilih:</Label>
+                        <p className="text-blue-800 text-sm">{formattedSchedule}</p>
                     </div>
                 )}
             </div>

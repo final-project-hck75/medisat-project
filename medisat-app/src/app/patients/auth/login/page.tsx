@@ -3,12 +3,24 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { login } from "@/app/patients/actions"
+import { cookies } from "next/headers"
+import { redirect } from "next/navigation"
+import Alert from "@/components/Alert"
 
 
 export default function Login() {
+
+    const Cookie = cookies().get("Authorization")?.value;
+
+    if (Cookie) redirect("/patients/medic")
+
+    
+
     return (
         <>
+        <Alert />
         <div className="p-10">
+
         <form action={login}>
             <div className="grid w-full max-w-sm items-center gap-1.5 pb-5">
                 <Label htmlFor="email">Email</Label>

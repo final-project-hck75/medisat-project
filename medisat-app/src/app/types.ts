@@ -36,6 +36,7 @@ export type RecordType = {
     createdAt?: Date | string;
     updatedAt?: Date | string;
     notes?: string | undefined;
+    doctor: DoctorType
 }
 
 // Add these to your existing types.ts file
