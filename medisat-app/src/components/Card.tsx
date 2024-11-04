@@ -2,6 +2,7 @@
 
 import { handlePayment } from "@/app/patients/actions";
 import { RecordType } from "@/app/types";
+import formatDate from "@/helpers/formatDate";
 import { useEffect } from "react";
 
 export default function Card({ el }: { el: RecordType }) {
@@ -12,8 +13,15 @@ export default function Card({ el }: { el: RecordType }) {
             formData.append('id', el._id);
             const data = await handlePayment(formData);
             window.snap.pay(data.token, {
-                onSuccess: function (result) {
+                onSuccess: async function (result) {
                     console.log(result, "SUCCESS")
+                    // fetch 
+                    await fetch(process.env.NEXT_PUBLIC_BASE_URL + `/api/payment/${el._id}`, {
+                        method: "PATCH",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },  
+                    })
                 },
             });
         } catch (error) {
@@ -52,7 +60,7 @@ export default function Card({ el }: { el: RecordType }) {
 
                         <div className="p-3 w-2/3 flex flex-wrap justify-end">
                             <p className="text-sm text-gray-500">Tanggal Pemeriksaan</p>
-                            <p className="text-emerald-700">{el.bookDate}</p>
+                            <p className="text-emerald-700">{formatDate(el.bookDate)}</p>
 
                         </div>
                     </div>
@@ -70,7 +78,7 @@ export default function Card({ el }: { el: RecordType }) {
                             </div>
                             <div className="p-3">
                                 <p className="text-sm text-gray-500">Dokter yang menangani</p>
-                                <p className="text-emerald-700">{ }</p>
+                                <p className="text-emerald-700">{el.doctor.name }</p>
                             </div>
                         </div>
                         <div>

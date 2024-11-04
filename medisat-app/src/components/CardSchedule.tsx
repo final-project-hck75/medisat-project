@@ -1,9 +1,9 @@
-import { handleSchedule } from "@/app/patients/actions";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { DoctorType } from "@/app/types";
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { Calendar } from "lucide-react";
+import formatDate from "@/helpers/formatDate";
 
 export default function CardSchedule({el, active, setActive}:{el:DoctorType, active:string, setActive: Dispatch<SetStateAction<string>>}) {
     const [selectedDate, setSelectedDate] = useState(''); //2024-11-05
@@ -70,18 +70,12 @@ export default function CardSchedule({el, active, setActive}:{el:DoctorType, act
 
     // console.log(selectedDate, "<<<<<")
     const handleDateSelect = (dateValue: string) => {
-        console.log(dateValue, "<<<<<")
         setSelectedDate(dateValue);
         
-        if (selectedSchedule) {
-            const date = new Date(dateValue);
-            const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
-            setFormattedSchedule(`${selectedDate}, ${selectedSchedule}`);
-        }
     };
 
     useEffect(() => {
-        setFormattedSchedule(`${selectedDate} ${selectedSchedule}`);
+        setFormattedSchedule(`${selectedDate? formatDate(selectedDate) : selectedDate} ${selectedSchedule}`);
     }, [selectedDate, selectedSchedule])
 
     return (
@@ -129,7 +123,7 @@ export default function CardSchedule({el, active, setActive}:{el:DoctorType, act
                                 onChange={(e) => handleDateSelect(e.target.value)}
                                 required
                             >
-                                <option value="">Pilih tanggal</option>
+                                <option value="" className="text-xs">Pilih tanggal</option>
                                 {availableDates.map((date) => (
                                     <option key={date.toISOString()} value={formatDateForValue(date)}>
                                         {formatDateForDisplay(date)}
@@ -148,10 +142,10 @@ export default function CardSchedule({el, active, setActive}:{el:DoctorType, act
                 <input type="hidden" name="selectedDate" value={selectedDate} />
                 <input type="hidden" name="timeRange" value={selectedSchedule} />
                 
-                {formattedSchedule && (
+                {selectedDate && (
                     <div className="w-full mt-4 p-3 bg-blue-50 rounded-lg">
-                        <Label className="block mb-2">Jadwal yang Dipilih:</Label>
-                        <p className="text-blue-800 font-medium">{formattedSchedule}</p>
+                        <Label className="block mb-2 text-xs">Jadwal yang Dipilih:</Label>
+                        <p className="text-blue-800 text-sm">{formattedSchedule}</p>
                     </div>
                 )}
             </div>

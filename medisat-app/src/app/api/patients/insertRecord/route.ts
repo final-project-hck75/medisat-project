@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
 
     await Doctor.insertRecord({
       bookDate,
-      status: "booked",
+      status: "paid",
       patientId: new ObjectId(patientId),
       doctorId: new ObjectId(doctorId),
     });

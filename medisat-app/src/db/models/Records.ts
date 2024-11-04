@@ -12,9 +12,37 @@ class RecordsModel {
   }
 
   static async getRecordByPatientId(patientId: string) {
-    const record = await this.collection()
-      .find({ patientId: new ObjectId(patientId) })
-      .toArray();
+    const pipeline = [
+      {
+        $match: {
+          patientId: new ObjectId(patientId),
+        },
+      },
+      {
+        $lookup: {
+          from: "patients",
+          localField: "patientId",
+          foreignField: "_id",
+          as: "patient",
+        },
+      },
+      {
+        $lookup: {
+          from: "doctors",
+          localField: "doctorId",
+          foreignField: "_id",
+          as: "doctor",
+        },
+      },
+      {
+        $unwind: "$patient",
+      },
+      {
+        $unwind: "$doctor",
+      },
+    ];
+    
+    const record = await this.collection().aggregate(pipeline).toArray();
     return record;
   }
 
