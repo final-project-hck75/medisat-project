@@ -56,7 +56,8 @@ export default class Doctor {
             ...newRecord,
         }
         data.createdAt = data.updatedAt = new Date();
-        await this.collRec.insertOne(data)
+        
+        // await this.collRec.insertOne(data)
     }
 
     static async updateRecord(updateRecord:RecordType){
