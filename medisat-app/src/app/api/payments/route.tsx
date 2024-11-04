@@ -1,11 +1,13 @@
+import RecordsModel from "@/db/models/Records";
+import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
 
 const getMidtransClient = () => {
   // Using require for midtrans-client
-  const midtransClient = require('midtrans-client');
+  const midtransClient = require("midtrans-client");
   return new midtransClient.Snap({
     isProduction: false,
-    serverKey: process.env.MIDTRANS_SERVER_KEY || '',
+    serverKey: process.env.MIDTRANS_SERVER_KEY || "",
   });
 };
 
@@ -32,9 +34,8 @@ export async function POST(req: NextRequest) {
     };
 
     const token = await snap.createTransactionToken(parameter);
-    console.log(token, "TOKEN")
+    console.log(token, "TOKEN");
     return NextResponse.json({ token }, { status: 200 });
-    
   } catch (error) {
     console.error("Payment error:", error);
     return NextResponse.json(

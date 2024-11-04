@@ -6,6 +6,16 @@ type RecordTypeToday = {
   bookDate: string;
 };
 
+type RecordType = {
+  _id: ObjectId;
+  patientId: ObjectId;
+  doctorId: ObjectId;
+  bookDate: string;
+  status: string;
+  createdAt: Date;
+  updatedAt?: Date;
+};
+
 class RecordsModel {
   static collection() {
     return db.collection("records");
@@ -40,6 +50,9 @@ class RecordsModel {
       },
       {
         $unwind: "$doctor",
+      },
+      {
+        $sort: { bookDate: 1 },
       },
     ];
     // const record = await this.collection()
@@ -117,8 +130,14 @@ class RecordsModel {
       {
         $sort: { createdAt: -1 },
       },
+      // {
+      //   $limit: 3,
+      // },
       {
-        $limit: 3,
+        $project: {
+          "doctor.password": 0,
+          "patient.password": 0,
+        },
       },
     ];
     const record = await this.collection().aggregate(pipeline).toArray();
@@ -128,7 +147,7 @@ class RecordsModel {
     return record;
   }
 
-  static async getRecordHistoryPatientIdFromParams(patientId: string){
+  static async getRecordHistoryPatientIdFromParams(patientId: string) {
     const pipeline = [
       {
         $match: {
@@ -152,6 +171,16 @@ class RecordsModel {
     ];
     const record = await this.collection().aggregate(pipeline).toArray();
     return record;
+  }
+
+  static async updateRecord(id: string) {
+    const _id = new ObjectId(id);
+
+    const data: { status: string; updatedAt?: Date } = {
+      status: "paid",
+    };
+    data.updatedAt = new Date();
+    await this.collection().updateOne({ _id }, { $set: data });
   }
 }
 

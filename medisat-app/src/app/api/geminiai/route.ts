@@ -15,7 +15,11 @@
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const geminiAI = new GoogleGenerativeAI(process.env.API_KEY);
+const apiKey = process.env.API_KEY;
+if (!apiKey) {
+  throw new Error("API_KEY is not defined");
+}
+const geminiAI = new GoogleGenerativeAI(apiKey);
 const model = geminiAI.getGenerativeModel({ model: "gemini-1.5-pro-001" });
 
 export default async function handler(req: any, res: any) {
