@@ -126,8 +126,8 @@ export async function handleSchedule(formData: FormData) {
     const data = await response.json();
 
     // Revalidate dan redirect
-    revalidatePath("/patients/medis");
-    redirect("/patients/medis");
+    revalidatePath("/patients/medic");
+    redirect("/patients/medic");
   
 }
 

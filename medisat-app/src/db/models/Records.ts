@@ -20,7 +20,6 @@ class RecordsModel {
 
   static async getRecordByDoctorIdToday(doctorId:string) {
     
-    console.log(doctorId, "ini di models ");
     const today = new Date();
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, "0");
@@ -58,7 +57,7 @@ class RecordsModel {
   }
 
   static async getRecordHistoryPatientId(patientId: string) {
-    console.log(new ObjectId(patientId));
+    // console.log(new ObjectId(patientId));
 
     const pipeline = [
       {
