@@ -101,6 +101,32 @@ class RecordsModel {
     //   .toArray();
     return record;
   }
+
+  static async getRecordHistoryPatientIdFromParams(patientId: string){
+    const pipeline = [
+      {
+        $match: {
+          patientId: new ObjectId(patientId),
+        },
+      },
+      {
+        $lookup: {
+          from: "patients",
+          localField: "patientId",
+          foreignField: "_id",
+          as: "patient",
+        },
+      },
+      {
+        $unwind: "$patient",
+      },
+      {
+        $sort: { createdAt: -1 },
+      },
+    ];
+    const record = await this.collection().aggregate(pipeline).toArray();
+    return record;
+  }
 }
 
 export default RecordsModel;

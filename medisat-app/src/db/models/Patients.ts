@@ -3,6 +3,7 @@ import { db } from "../config";
 import { hashPassword } from "@/helpers/bcrypt";
 import { PatientType } from "@/app/types";
 import { ObjectId } from "mongodb";
+import PatientMail from "@/helpers/mail";
 
 const PatientSchema = z.object({
   nik: z.string().min(5),
@@ -31,7 +32,9 @@ class PatientModel {
       throw { message: "Email or NIK already exists", status: 400 };
     }
     console.log(patient, "PATIENT")
-    return await this.collection().insertOne(patient);
+    await this.collection().insertOne(patient);
+    return PatientMail({name:patient.name, email:patient.email});
+
   }
 
   static async findByEmail(email: string) {

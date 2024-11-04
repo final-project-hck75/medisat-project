@@ -58,3 +58,23 @@ export interface AppointmentResponse {
       // Add other fields that your API returns
   };
 }
+
+export type recordByDoctorIdToday = {
+  _id:string,
+  bookDate:string,
+  status:string,
+  patientId:string,
+  doctorId:string,
+  updatedAt:string,
+  createdAt:string,
+  patient:{
+    _id:string,
+    nik:string,
+    name:string,
+    email:string,
+    password:string,
+    birthDate:string,
+    address:string,
+    phoneNumber:string
+  }
+}
