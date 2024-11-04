@@ -2,7 +2,8 @@ import nodemailer from "nodemailer"
 
 type paramsType={
     name:string,
-    email:string
+    email:string,
+    bookDate:string,
 }
 
 export default async function PatientMail(params:paramsType) {

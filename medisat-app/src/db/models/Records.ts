@@ -1,10 +1,21 @@
 import { ObjectId } from "mongodb";
 import { db } from "../config";
+import { z } from "zod";
 
-type RecordTypeToday = {
-  doctorId: string;
-  bookDate: string;
-};
+export const RecordSchema = z.object({
+    _id : z.instanceof(ObjectId).optional(),
+    bookDate:z.string({message:"Book Date is required"}),
+    status:z.string({message:"Status is required"}),
+    symptom:z.string({message:"Symptom is required"}).optional(),
+    disease:z.string({message:"Disease is required"}).optional(),
+    recipe:z.string({message:"Recipe is required"}).optional(),
+    notes:z.string().optional(),
+    checkupDate:z.string({message:"Checkup Date is required"}).optional(),
+    patientId:z.instanceof(ObjectId,{message:"Patient Id is required"}),
+    doctorId:z.instanceof(ObjectId,{message:"Doctor Id is required"}),
+    createdAt:z.date().default(new Date()).optional(),
+    updatedAt:z.date().default(new Date()).optional()
+})
 
 type RecordType = {
   _id: ObjectId;
@@ -22,7 +33,6 @@ class RecordsModel {
   }
 
   static async getRecordByPatientId(patientId: string) {
-    console.log(new ObjectId(patientId));
     const pipeline = [
       {
         $match: {
@@ -55,27 +65,22 @@ class RecordsModel {
         $sort: { bookDate: 1 },
       },
     ];
-    // const record = await this.collection()
-    //   .find({ patientId: new ObjectId(patientId) })
-    //   .toArray();
-    // return record;
     const record = await this.collection().aggregate(pipeline).toArray();
     return record;
   }
 
   static async getRecordByDoctorIdToday(doctorId: string) {
-    console.log(doctorId, "ini di models ");
     const today = new Date();
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, "0");
     const date = String(today.getDate()).padStart(2, "0");
-    const formattedDate = `${year}-${month}-${date}`;
+    const formattedDate = `${year}-${month}-${date}`;    
     const pipeline = [
       {
         $match: {
-          doctorId: new ObjectId("6720bc3261211869139bec9d"),
+          doctorId: new ObjectId(doctorId),
           status: "booked",
-          bookDate: "2024-11-01",
+          bookDate: formattedDate,
         },
       },
       {
@@ -91,13 +96,17 @@ class RecordsModel {
           path: "$patient",
         },
       },
+      {
+        $project:{
+          "patient.password": false,
+        }
+      },
     ];
     const records = await this.collection().aggregate(pipeline).toArray();
     return records;
   }
 
   static async getRecordHistoryPatientId(patientId: string) {
-    console.log(new ObjectId(patientId));
 
     const pipeline = [
       {
@@ -141,9 +150,6 @@ class RecordsModel {
       },
     ];
     const record = await this.collection().aggregate(pipeline).toArray();
-    // const record = await this.collection()
-    //   .find({ patientId: new ObjectId(patientId) })
-    //   .toArray();
     return record;
   }
 
@@ -152,6 +158,13 @@ class RecordsModel {
       {
         $match: {
           patientId: new ObjectId(patientId),
+          status: "done",
+        },
+      },
+      {
+        $match: {
+          patientId: new ObjectId(patientId),
+          status: "paid",
         },
       },
       {
@@ -164,6 +177,11 @@ class RecordsModel {
       },
       {
         $unwind: "$patient",
+      },
+      {
+        $project:{
+          "patient.password": false,
+        }
       },
       {
         $sort: { createdAt: -1 },

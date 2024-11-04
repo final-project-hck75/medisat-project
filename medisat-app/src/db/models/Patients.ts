@@ -32,9 +32,7 @@ class PatientModel {
       throw { message: "Email or NIK already exists", status: 400 };
     }
     console.log(patient, "PATIENT")
-    await this.collection().insertOne(patient);
-    return PatientMail({name:patient.name, email:patient.email});
-
+    return await this.collection().insertOne(patient);
   }
 
   static async findByEmail(email: string) {
