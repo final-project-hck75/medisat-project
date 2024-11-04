@@ -34,6 +34,8 @@ export default function Medis () {
         getRecord().then(setRecord)
     }, [])
 
+    
+
     return (
         <>
             <div>

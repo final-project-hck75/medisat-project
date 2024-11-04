@@ -1,3 +1,11 @@
+declare global {
+  interface Window {
+    snap: {
+      pay: (token: string, options: { onSuccess: (result: any) => void }) => void;
+    }
+  }
+}
+
 "use server";
 
 import { cookies } from "next/headers";
@@ -26,8 +34,6 @@ export async function login(formData: FormData) {
     message?: string;
   };
   
-  console.log(data)
-
   if (!response.ok) {
     redirect("/patients/auth/login");
   }
@@ -110,7 +116,7 @@ export async function handleSchedule(formData: FormData) {
       }
     );
 
-    console.log(cookies().toString(), "COOKIES")
+    // console.log(cookies().toString(), "COOKIES")
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -131,7 +137,7 @@ export const handlePayment = async (formData: FormData) => {
       _id: formData.get("id")
     }
 
-    console.log(body, "body");
+    // console.log(body, "body");
 
     const response = await fetch("http://localhost:3000/api/payments", {
       method: "POST",
@@ -149,7 +155,7 @@ export const handlePayment = async (formData: FormData) => {
     }
 
     const data = await response.json();
-    console.log(data, "DATA");
+
     return data;
   } catch (error) {
     console.error('Payment processing error:', error);
