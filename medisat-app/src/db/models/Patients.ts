@@ -27,10 +27,10 @@ class PatientModel {
       $or: [{ email: patient.email }, { nik: patient.nik }],
     });
 
-    if (existingPatient){
+    if (existingPatient) {
       throw { message: "Email or NIK already exists", status: 400 };
     }
-    console.log(patient, "PATIENT")
+    console.log(patient, "PATIENT");
     return await this.collection().insertOne(patient);
   }
 

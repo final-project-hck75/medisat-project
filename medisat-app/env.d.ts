@@ -5,6 +5,7 @@ declare global {
       NODE_ENV: "development" | "production";
       MONGO_URL: string;
       JWT_SECMEDI: string;
+      API_KEY: string;
     }
   }
 }
