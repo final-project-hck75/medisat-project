@@ -65,7 +65,7 @@ export async function register(formData: FormData) {
       },
     }
   );
-  console.log(body, "BODY")
+  console.log(body, "BODY");
 
   await response.json();
 
@@ -115,8 +115,6 @@ export async function handleSchedule(formData: FormData) {
         body: JSON.stringify(appointmentData),
       }
     );
-
-    // console.log(cookies().toString(), "COOKIES")
 
     if (!response.ok) {
       const errorData = await response.json();

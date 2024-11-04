@@ -12,14 +12,45 @@ class RecordsModel {
   }
 
   static async getRecordByPatientId(patientId: string) {
-    const record = await this.collection()
-      .find({ patientId: new ObjectId(patientId) })
-      .toArray();
+    console.log(new ObjectId(patientId));
+    const pipeline = [
+      {
+        $match: {
+          patientId: new ObjectId(patientId),
+        },
+      },
+      {
+        $lookup: {
+          from: "patients",
+          localField: "patientId",
+          foreignField: "_id",
+          as: "patient",
+        },
+      },
+      {
+        $lookup: {
+          from: "doctors",
+          localField: "doctorId",
+          foreignField: "_id",
+          as: "doctor",
+        },
+      },
+      {
+        $unwind: "$patient",
+      },
+      {
+        $unwind: "$doctor",
+      },
+    ];
+    // const record = await this.collection()
+    //   .find({ patientId: new ObjectId(patientId) })
+    //   .toArray();
+    // return record;
+    const record = await this.collection().aggregate(pipeline).toArray();
     return record;
   }
 
-  static async getRecordByDoctorIdToday(doctorId:string) {
-    
+  static async getRecordByDoctorIdToday(doctorId: string) {
     console.log(doctorId, "ini di models ");
     const today = new Date();
     const year = today.getFullYear();
@@ -27,32 +58,27 @@ class RecordsModel {
     const date = String(today.getDate()).padStart(2, "0");
     const formattedDate = `${year}-${month}-${date}`;
     const pipeline = [
-  {
-    $match:
       {
-        doctorId: new ObjectId(
-          "6720bc3261211869139bec9d"
-        ),
-        status: "booked",
-        bookDate: "2024-11-01",
+        $match: {
+          doctorId: new ObjectId("6720bc3261211869139bec9d"),
+          status: "booked",
+          bookDate: "2024-11-01",
+        },
       },
-  },
-  {
-    $lookup:
       {
-        from: "patients",
-        localField: "patientId",
-        foreignField: "_id",
-        as: "patient",
+        $lookup: {
+          from: "patients",
+          localField: "patientId",
+          foreignField: "_id",
+          as: "patient",
+        },
       },
-  },
-  {
-    $unwind:
       {
-        path: "$patient",
+        $unwind: {
+          path: "$patient",
+        },
       },
-  }
-]
+    ];
     const records = await this.collection().aggregate(pipeline).toArray();
     return records;
   }

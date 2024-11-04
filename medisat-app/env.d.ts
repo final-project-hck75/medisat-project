@@ -7,6 +7,7 @@ declare global {
       JWT_SECMEDI: string;
       MEDISAT_EMAIL:string
       MEDISAT_PASSWORD:string
+      API_KEY: string;
     }
   }
 }
