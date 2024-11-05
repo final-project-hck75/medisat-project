@@ -1,6 +1,9 @@
 'use server'
 
+import { revalidateTag } from "next/cache";
+
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -24,6 +27,7 @@ export async function getPatientList(){
                 'Content-Type': 'application/json',
                 Cookie: cookies().toString(),
             },
+            next: {tags: ['getPatientList']}
         });
 
         console.log(response, "response========");
@@ -64,7 +68,7 @@ export async function getMedicalHistory(patientId: string) {
 }
 
 export async function updateRekamMedis(recordId: string|null, form: Object){
-
+    
     try {
         if (!recordId) {
             throw new Error("Record ID tidak valid");
@@ -83,7 +87,64 @@ export async function updateRekamMedis(recordId: string|null, form: Object){
         if (!response.ok) {
             throw new Error("Gagal mengupdate rekam medis");
         }
+
+        // revalidateTag('getPatientList');
+        // redirect('/doctors');
     } catch (error) {
         console.log(error);
     }
+}
+
+export async function handleForm(formData: FormData) {
+    'use server'
+
+    const recordId = searchParams.recordId;
+
+    // console.log(recordId, "param ========");
+
+
+    // Update using server component
+    const formRecord = {
+        name: formData.get('name'),
+        date: formData.get('date'),
+        symptom: formData.get('symptom'),
+        disease: formData.get('disease'),
+        recipe: formData.get('recipe'),
+        notes: formData.get('notes')
+    }
+
+    const urlSearchParams = new URLSearchParams();
+    urlSearchParams.set('patientId', patientId);
+    urlSearchParams.set('name', patientName);
+    urlSearchParams.set('date', bookDate);
+    urlSearchParams.set('recordId', recordId);
+
+    if (!formRecord.name) {
+        urlSearchParams.set('error', 'Nama tidak boleh kosong')
+        redirect('/doctors/records?' + urlSearchParams.toString())
+    }
+    if (!formRecord.date) {
+        urlSearchParams.set('error', 'Tanggal tidak boleh kosong')
+        redirect('/doctors/records?' + urlSearchParams.toString())
+    }
+    if (!formRecord.symptom) {
+        urlSearchParams.set('error', 'Gejala tidak boleh kosong')
+        redirect('/doctors/records?' + urlSearchParams.toString())
+    }
+    if (!formRecord.disease) {
+        urlSearchParams.set('error', 'Penyakit tidak boleh kosong')
+        redirect('/doctors/records?' + urlSearchParams.toString())
+    }
+    if (!formRecord.recipe) {
+        urlSearchParams.set('error', 'Resep tidak boleh kosong')
+        redirect('/doctors/records?' + urlSearchParams.toString())
+    }
+    if (!formRecord.notes) {
+        urlSearchParams.set('error', 'Catatan tidak boleh kosong')
+        redirect('/doctors/records?' + urlSearchParams.toString())
+    }
+
+    updateRekamMedis(recordId, formRecord)
+    revalidateTag('getPatientList')
+    redirect('/doctors')
 }

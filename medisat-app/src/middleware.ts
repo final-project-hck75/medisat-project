@@ -8,13 +8,16 @@ export async function middleware(request: NextRequest) {
         "/doctors/auth/login",
         "/api/doctors/login",
         "/api/patients/login",
-        "/api/patients/register"
+        "/api/patients/register",
+        "/api/oauth"
     ];
 
     // Early return for whitelisted paths
     if (whiteList.some(path => request.nextUrl.pathname.startsWith(path))) {
         return NextResponse.next();
     }
+
+    console.log(request.nextUrl.pathname, "request.nextUrl.pathname middleware ==========");
 
     // Get authorization from request cookies instead of server-side cookies
     const authorization = request.cookies.get("Authorization");
@@ -24,7 +27,7 @@ export async function middleware(request: NextRequest) {
     // Handle unauthenticated requests
     if (!authorization) {
         // Special handling for doctors route
-        if (request.nextUrl.pathname.startsWith("/doctors")) {
+        if (request.nextUrl.pathname.startsWith("/doctors") && !request.nextUrl.pathname.startsWith("/doctors/auth")) {
             return NextResponse.redirect(new URL("/doctors/auth/login", request.url));
         }
         
@@ -34,7 +37,7 @@ export async function middleware(request: NextRequest) {
         }
 
         // For patient routes, redirect to login
-        if (request.nextUrl.pathname.startsWith("/patients")) {
+        if (request.nextUrl.pathname.startsWith("/patients") && !request.nextUrl.pathname.startsWith("/patients/auth")) {
             return NextResponse.redirect(new URL("/patients/auth/login", request.url));
         }
         

@@ -27,11 +27,6 @@ const items = [
     url: "/doctors",
     icon: NotepadText,
   },
-  {
-    title: "Kalender",
-    url: "/doctors",
-    icon: CalendarDays,
-  }
 ]
 
 export function SidebarDoctor() {

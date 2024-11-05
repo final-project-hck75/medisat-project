@@ -13,9 +13,10 @@ import { Button } from "./ui/button"
 import Link from "next/link"
 import { getPatientList } from "@/app/doctors/actions"
 import { recordByDoctorIdTodayType } from "@/app/types"
+import { use, useEffect } from "react"
 
 export default async function PatientTabel() {
-    
+
     const patients: recordByDoctorIdTodayType[] = await getPatientList()
     // console.log(patients, "patients ===========");
     

@@ -1,7 +1,7 @@
 import { sign, verify } from "jsonwebtoken";
 import * as jose from "jose";
 
-export const signToken = (payload: { _id: string }) => {
+export const signToken = (payload: { _id: string, role: string }) => {
   return sign(payload, process.env.JWT_SECMEDI as string);
 };
 
