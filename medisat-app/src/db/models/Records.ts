@@ -55,12 +55,12 @@ class RecordsModel {
           as: "doctor",
         },
       },
-      {
-        $unwind: "$patient",
-      },
-      {
-        $unwind: "$doctor",
-      },
+      // {
+      //   $unwind: "$patient",
+      // },
+      // {
+      //   $unwind: "$doctor",
+      // },
       {
         $sort: { bookDate: 1 },
       },

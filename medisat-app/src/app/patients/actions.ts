@@ -1,7 +1,12 @@
 declare global {
   interface Window {
     snap: {
-      pay: (token: string, options: { onSuccess: (result: any) => void }) => void;
+      pay: (token: string, options: { 
+        onSuccess: (result: any) => void,
+        onPending: (result: any) => void,
+        onError: (result: any) => void,
+        onClose: () => void,
+      }) => void;
     }
   }
 }
@@ -102,8 +107,6 @@ export async function register(formData: FormData) {
       },
     }
   );
-  console.log(body, "BODY");
-
   await response.json();
 
   if (!response.ok) {
@@ -164,8 +167,8 @@ export async function handleSchedule(formData: FormData) {
     const data = await response.json();
 
     // Revalidate dan redirect
-    revalidatePath("/patients/medic");
-    redirect("/patients/medic");
+    revalidatePath("/patients");
+    redirect("/patients");
   
 }
 

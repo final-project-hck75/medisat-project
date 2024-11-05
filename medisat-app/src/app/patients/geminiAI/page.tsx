@@ -26,7 +26,6 @@ export default function GeminiAi() {
   const apiKey = process.env.NEXT_PUBLIC_API_KEY!; // Use environment variable for Next.js
 
   const genAi = new GoogleGenerativeAI(apiKey);
-  console.log(genAi, "genAi");
 
   //   const genAi = new GoogleGenerativeAI(process.env.API_KEY);
 
@@ -158,7 +157,7 @@ export default function GeminiAi() {
           ))}
         </div>
 
-        {error && <div className="mb-6 text-center text-red-400">{error}</div>}
+        {/* {error && <div className="mb-6 text-center text-red-400">{error}</div>} */}
 
         <div className="flex">
           <input

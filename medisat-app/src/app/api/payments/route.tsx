@@ -1,5 +1,4 @@
-import RecordsModel from "@/db/models/Records";
-import { ObjectId } from "mongodb";
+
 import { NextRequest, NextResponse } from "next/server";
 
 const getMidtransClient = () => {
@@ -18,13 +17,14 @@ export async function POST(req: NextRequest) {
 
     const patientId = req.headers.get(" ");
     const { _id } = await req.json();
+    console.log(_id, "ID dari route payment api");
 
     if (!patientId || !_id) {
       return NextResponse.json(
         { error: "Missing required parameters" },
         { status: 400 }
       );
-    }
+    } 
 
     const parameter = {
       transaction_details: {
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     };
 
     const token = await snap.createTransactionToken(parameter);
-    console.log(token, "TOKEN");
+    // console.log(token, "TOKEN");
     return NextResponse.json({ token }, { status: 200 });
   } catch (error) {
     console.error("Payment error:", error);
