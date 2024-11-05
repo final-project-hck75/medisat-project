@@ -8,11 +8,6 @@ import { use, useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
 export default function Card({ el }: { el: RecordType }) {
-
-
-
-    const [status, setStatus] = useState(el.status);
-
     const handleClick = async () => {
         try {
             const formData = new FormData();
@@ -21,7 +16,8 @@ export default function Card({ el }: { el: RecordType }) {
             
             window.snap.pay(data.token, {
                 onSuccess: function (result) {
-                    
+                    console.log('success');
+                    console.log(result);
                     return false
                 },
                 onPending: function(result) {

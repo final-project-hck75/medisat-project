@@ -8,7 +8,6 @@ import { RecordType } from "@/app/types";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { redirect, usePathname, useRouter, useSearchParams } from "next/navigation";
-import { revalidatePath } from "next/cache";
 const logo = require('@/app/assets/MEDISAT.png')
 
 
@@ -18,16 +17,20 @@ export default function Medis() {
     const order_id = searchParams.get("order_id")
     const status_code = searchParams.get("status_code")
     const [record, setRecord] = useState<RecordType[]>([]);
+    const router = useRouter()
 
-
-    if (status_code === "200") {
-        fetch(process.env.NEXT_PUBLIC_BASE_URL + `/api/payments/${order_id}`, {
+    useEffect(() => {
+        if (status_code === "200") {
+            fetch(process.env.NEXT_PUBLIC_BASE_URL + `/api/payments/${order_id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
             },
-        });
-    }
+            }).then(() => {
+                router.push("/patients")
+            })
+        }
+    }, [status_code, order_id])
 
     async function getRecord() {
         const records = await fetch(process.env.NEXT_PUBLIC_BASE_URL + "/api/patients/records", {
@@ -69,14 +72,14 @@ export default function Medis() {
             <div className="flex flex-wrap justify-center">
                 <div>
                     <div className="flex flex-wrap justify-center gap-5">
-                    <div className="flex flex-wrap justify-center">
-          <Link
-            href={"/patients/geminiAI/"}
-            className="text-xl font-bold text-blue-500 hover:text-blue-700"
-          >
-                Tanya Medisat
-          </Link>
-        </div>
+                        <div className="flex flex-wrap justify-center">
+                            <Link
+                                href={"/patients/geminiAI/"}
+                                className="text-xl font-bold text-blue-500 hover:text-blue-700"
+                            >
+                                Tanya Medisat
+                            </Link>
+                        </div>
                         <div>
                             <Link href={"/patients/schedule/"} className="text-xl font-bold text-blue-500 hover:text-blue-700">Antrian baru</Link>
                         </div>
