@@ -5,6 +5,8 @@ import { NextRequest, NextResponse } from "next/server";
 // ? Untuk update record pasien
 export async function PUT(request: NextRequest, {params}:{params:{id:string}}) {
     try {
+        console.log(params, "params =======");
+        
         const _id = new ObjectId(params.id);
 
         const{

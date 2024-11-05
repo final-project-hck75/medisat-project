@@ -1,3 +1,5 @@
+'use server'
+
 import React from "react";
 
 import { CheckIcon } from "@radix-ui/react-icons"
@@ -10,17 +12,27 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import { getMedicalHistory } from "@/app/doctors/actions";
+import { recordByDoctorIdTodayType } from "@/app/types";
 
-type CardProps = React.ComponentProps<typeof Card>
+type CardProps = React.ComponentProps<typeof Card> & {
+    patientId: string;
+}
 
 
-export default function HistoryCard({ className, ...props }: CardProps) {
+export default async function HistoryCard({ className, patientId, ...props }: CardProps) {
+    
+    // console.log(patientId, "patientId di history ========");
+
+    const historys: recordByDoctorIdTodayType[] = await getMedicalHistory(patientId)
+
+    // console.log(historys, "history ========");
+
     return (
         <div className="w-full bg-white rounded-lg my-5 shadow border p-6 dark:bg-gray-800 border-emerald-500 overflow-y-scroll max-h-96">
             <div className="space-y-4 mt-4">
-                {[...Array(3)].map((_, index) => (
+                {historys.map((history: recordByDoctorIdTodayType) => (
                     <div
-                        key={index}
                         className="bg-gray-100 p-4 rounded shadow dark:bg-gray-700 text-gray-900 dark:text-white"
                     >
                         <Card className={cn("w-[380px]", className)} {...props}>
@@ -32,7 +44,7 @@ export default function HistoryCard({ className, ...props }: CardProps) {
                                             <CheckIcon />
                                         </div>
                                         <div>
-                                            Fani
+                                            {history.patient.name}
                                         </div>
                                     </div>
                                 </CardTitle>
@@ -41,7 +53,6 @@ export default function HistoryCard({ className, ...props }: CardProps) {
 
                                 <div>
                                     <div
-                                        key={index}
                                         className="mb-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0"
                                     >
                                         <span className="flex h-2 w-2 translate-y-1 rounded-full bg-sky-500" />
@@ -50,7 +61,7 @@ export default function HistoryCard({ className, ...props }: CardProps) {
                                                 Penyakit
                                             </p>
                                             <p className="text-sm text-muted-foreground">
-                                                Asam Urat
+                                                {history.disease}
                                             </p>
 
                                         </div>
@@ -61,8 +72,7 @@ export default function HistoryCard({ className, ...props }: CardProps) {
                                                 Resep Obat
                                             </p>
                                             <p className="text-sm text-muted-foreground">
-                                                Asam Mefenamat,
-                                                Paracetamol
+                                                {history.recipe}
                                             </p>
                                         </div>
                                     </div>

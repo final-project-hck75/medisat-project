@@ -36,7 +36,9 @@ export default function MedicalRecordCard() {
 
     return (
         <div className="w-full bg-white rounded-lg my-5 shadow border p-6 dark:bg-gray-800 border-emerald-500">
-            <form action={updateRekamMedis}>
+            <form 
+            // action={updateRekamMedis}
+            >
                 <div className="space-y-4 mt-4">
 
                     <div>

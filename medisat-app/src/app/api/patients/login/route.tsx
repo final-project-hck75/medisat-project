@@ -3,6 +3,7 @@ import { comparePassword } from "@/helpers/bcrypt";
 import { signToken } from "@/helpers/jwt";
 import { cookies } from "next/headers";
 
+
 // API POST REGISTER PATIENTS
 
 export async function POST(request: Request) {
