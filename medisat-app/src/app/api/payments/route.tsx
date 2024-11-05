@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     // Initialize Midtrans client
     const snap = getMidtransClient();
 
-    const patientId = req.headers.get("id");
+    const patientId = req.headers.get(" ");
     const { _id } = await req.json();
 
     if (!patientId || !_id) {

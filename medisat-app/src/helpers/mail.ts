@@ -4,10 +4,14 @@ type paramsType={
     name:string,
     email:string,
     bookDate:string,
+    status:string,
+    doctorName:string,
 }
 
 export default async function PatientMail(params:paramsType) {
-    const {name, email} = params
+    const {name, email, status, doctorName} = params
+    let {bookDate} = params
+    bookDate = bookDate.split("-").reverse().join("-")
     const transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
             port: 465,
@@ -84,13 +88,17 @@ export default async function PatientMail(params:paramsType) {
             <h1>Medisat App</h1>
         </div>
         <div class="body">
-            <p>Dear ${name},</p>
-            <p>Terima kasih sudah menggunakan layanan kami.</p>
+            <p>Yth ${name},</p>
+            <p>Reservasimu sudah kami terima sebagai berikut: </p>
             <p>
-            Akun anda sudah terdaftar di aplikasi kami. <br/>
-            Anda dapat melakukan login menggunakan email: ${email} dan password yang sudah terdaftar.
+                <strong>Dokter:</strong> ${doctorName}<br>
+                <strong>Tanggal:</strong> ${bookDate}<br>
+                <strong>Status:</strong> ${status}
             </p>
-            <p>Sekian untuk informasinya,<br>Terima Kasih</p>
+            <p>
+                Anda dapat melakukan login menggunakan email: ${email} dan password yang sudah terdaftar.
+            </p>
+            <p>Terima kasih sudah menggunakan layanan Medisat</p>
         </div>
         <div class="footer">
             <p>&copy; Medisat 2024</p>
@@ -101,6 +109,6 @@ export default async function PatientMail(params:paramsType) {
 </html>`, // html body
       });
 
-    //   console.log("Message sent: %s", info.messageId)
+      console.log("Message sent: %s", info.messageId)
 }
 

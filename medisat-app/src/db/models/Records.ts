@@ -158,13 +158,7 @@ class RecordsModel {
       {
         $match: {
           patientId: new ObjectId(patientId),
-          status: "done",
-        },
-      },
-      {
-        $match: {
-          patientId: new ObjectId(patientId),
-          status: "paid",
+          status: { $in: ["paid", "done"] },
         },
       },
       {
@@ -176,11 +170,27 @@ class RecordsModel {
         },
       },
       {
+        $lookup: {
+          from: "doctors",
+          localField: "doctorId",
+          foreignField: "_id",
+          as: "doctor",
+        },
+      },
+      {
         $unwind: "$patient",
+      },
+      {
+        $unwind: "$doctor",
       },
       {
         $project:{
           "patient.password": false,
+        }
+      },
+      {
+        $project:{
+          "doctor.password": false,
         }
       },
       {

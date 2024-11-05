@@ -59,7 +59,10 @@ export default function Medis () {
                     </form>
                 </div>
                 <div className="flex flex-wrap justify-center">
+                    <div>
+                    <Link href={"//"} className="text-xl font-bold text-blue-500 hover:text-blue-700">AI</Link>
                     <Link href={"/patients/schedule/"} className="text-xl font-bold text-blue-500 hover:text-blue-700">Antrian baru</Link>
+                    </div>
                 {record.map(el=>(
                     <Card el={el} key={el._id} />
                 ))}

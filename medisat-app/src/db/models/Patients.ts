@@ -3,7 +3,7 @@ import { db } from "../config";
 import { hashPassword } from "@/helpers/bcrypt";
 import { PatientType } from "@/app/types";
 import { ObjectId } from "mongodb";
-import PatientMail from "@/helpers/mail";
+
 
 const PatientSchema = z.object({
   nik: z.string().min(5),
@@ -15,10 +15,14 @@ const PatientSchema = z.object({
   phoneNumber: z.string().min(5),
 });
 
+type PatientType = z.infer<typeof PatientSchema>;
+
 class PatientModel {
   static collection() {
     return db.collection("patients");
   }
+
+  static collectionPatient = db.collection<PatientType>("patients")
 
   static async create(patient: PatientType) {
     await PatientSchema.parseAsync(patient);
@@ -33,6 +37,7 @@ class PatientModel {
     }
     console.log(patient, "PATIENT")
     return await this.collection().insertOne(patient);
+
   }
 
   static async findByEmail(email: string) {
@@ -74,8 +79,10 @@ class PatientModel {
     };
   }
 
-  static async getPatienstBySlug(slug: string) {
-    return await this.collection().find({ slug: slug }).next();
+  static async getPatientsById(id: string) {
+    const patientId = new ObjectId(id);
+    const patients = await this.collectionPatient.findOne(patientId);
+    return patients
   }
 }
 
