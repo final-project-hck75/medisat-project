@@ -48,7 +48,7 @@ const HamburgerMenu = () => {
             Tanya Medisat
           </Link>
           <form action={handleLogout}>
-            <Button variant={"ghost"} onClick={toggleMenu}>Logout</Button>
+            <Button variant={"ghost"}>Logout</Button>
               
 
           </form>

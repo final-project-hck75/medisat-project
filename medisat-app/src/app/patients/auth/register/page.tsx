@@ -55,7 +55,7 @@ export default function Register(){
 
             <div className="flex flex-wrap gap-10 items-center">
                 <Button variant="auth">Register</Button>
-                <p><Link className="text-blue-600" href={"/patients/auth/login"}>Login disini!</Link></p>
+                <p>Sudah punya akun? Login<Link className="text-blue-600" href={"/patients/auth/login"}> disini</Link></p>
             </div>
         </form>
         </div>

@@ -2,12 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 import Hamburger from "./Hamburger";
 import { cookies } from "next/headers";
-const logo = require('../app/assets/MEDISAT.png')
+import logo from '../app/assets/MEDISAT.png'
 
 export default function Navbar() {
 
     const Cookie = cookies().get("Authorization")?.value;
-
 
     return (
         <div className="flex flex-wrap justify-start items-center px-3 py-3 fixed top-0 w-full  bg-blue-100 ">
