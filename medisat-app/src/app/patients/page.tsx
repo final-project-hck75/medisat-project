@@ -69,10 +69,14 @@ export default function Medis() {
             <div className="flex flex-wrap justify-center">
                 <div>
                     <div className="flex flex-wrap justify-center gap-5">
-                        <div>
-                    <Link href={"/patients/geminiAI"} className="text-xl font-bold text-blue-500 hover:text-blue-700">AI</Link>
-
-                        </div>
+                    <div className="flex flex-wrap justify-center">
+          <Link
+            href={"/patients/geminiAI/"}
+            className="text-xl font-bold text-blue-500 hover:text-blue-700"
+          >
+                Tanya Medisat
+          </Link>
+        </div>
                         <div>
                             <Link href={"/patients/schedule/"} className="text-xl font-bold text-blue-500 hover:text-blue-700">Antrian baru</Link>
                         </div>

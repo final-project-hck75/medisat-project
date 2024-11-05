@@ -127,18 +127,18 @@ export default function GeminiAi() {
       className="flex items-center justify-center min-h-screen mt-8"
       style={{
         backgroundImage:
-          "url(https://plus.unsplash.com/premium_photo-1690297853326-e127726588ac?q=80&w=2832&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
+          "url(https://images.unsplash.com/photo-1638202993928-7267aad84c31?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backdropFilter: "blur(4px)",
       }}
     >
-      <div className="w-full max-w-4xl p-10 bg-opacity-100 border shadow-xl bg-zinc-40 rounded-3xl backdrop-transparant border-zinc-600">
-        <h1 className="mb-10 text-4xl font-bold tracking-wide text-center text-white text-bold">
+      <div className="w-full max-w-4xl p-10 bg-opacity-100 shadow-xl bg-zinc-40 rounded-3xl backdrop-transparant border-zinc-600">
+        <h1 className="mb-10 text-4xl font-bold tracking-wide text-center text-green-600 text-bold">
           Tanya Medisat
         </h1>
 
-        <div className="p-6 mb-8 space-y-4 overflow-y-auto border shadow-inner rounded-xl h-96 bg-gradient-to-br from-zinc-700 to-zinc-800 border-zinc-600 scrollbar-thin scrollbar-thumb-zinc-600 scrollbar-track-zinc-800">
+        <div className="p-6 mb-8 space-y-4 overflow-y-auto border shadow-inner rounded-xl h-96 bg-gradient-to-br bg-transparent scrollbar-thin scrollbar-thumb-zinc-600 scrollbar-track-zinc-800">
           {messages.map((message, index) => (
             <div
               key={index}
