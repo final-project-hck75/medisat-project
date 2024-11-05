@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { db } from "../config";
 import { hashPassword } from "@/helpers/bcrypt";
-import { PatientType } from "@/app/types";
 import { ObjectId } from "mongodb";
 
 
@@ -35,7 +34,6 @@ class PatientModel {
     if (existingPatient) {
       throw { message: "Email or NIK already exists", status: 400 };
     }
-    console.log(patient, "PATIENT")
     return await this.collection().insertOne(patient);
 
   }
