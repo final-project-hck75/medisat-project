@@ -4,6 +4,7 @@ import Card from "@/components/Card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { handleLogout } from "../actions";
+import ButtonChat from "@/components/ButtonChat";
 import { RecordType } from "@/app/types";
 import { useEffect, useState } from "react";
 
@@ -63,6 +64,7 @@ export default function Medis() {
             Tanya Medisat
           </Link>
         </div>
+        <ButtonChat />
       </div>
     </>
   );
