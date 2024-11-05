@@ -7,7 +7,6 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
-    console.log(params.id);
     const id: string = params.id;
     await RecordsModel.updateRecord(id);
     // const data = await RecordsModel.getRecordHistoryPatientIdFromParams(id);

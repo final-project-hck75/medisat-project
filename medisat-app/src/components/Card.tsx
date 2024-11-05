@@ -3,33 +3,43 @@
 import { handlePayment } from "@/app/patients/actions";
 import { RecordType } from "@/app/types";
 import formatDate from "@/helpers/formatDate";
-import { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { use, useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 export default function Card({ el }: { el: RecordType }) {
+
+
+
+    const [status, setStatus] = useState(el.status);
 
     const handleClick = async () => {
         try {
             const formData = new FormData();
             formData.append('id', el._id);
             const data = await handlePayment(formData);
+            
             window.snap.pay(data.token, {
-                onSuccess: async function (result) {
-                    console.log(result, "SUCCESS")
-                    // fetch 
-                    await fetch(process.env.NEXT_PUBLIC_BASE_URL + `/api/payment/${el._id}`, {
-                        method: "PATCH",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },  
-                    })
+                onSuccess: function (result) {
+                    
+                    return false
+                },
+                onPending: function(result) {
+                    console.log('pending');
+                    console.log(result);
+                },
+                onError: function(result) {
+                    console.log('error');
+                    console.log(result);
+                },
+                onClose: function() {
+                    console.log('customer closed the popup without finishing the payment');
                 },
             });
         } catch (error) {
-            console.error(error);
+            console.error("Error initiating payment:", error);
         }
     };
-
-
 
     useEffect(() => {
         const snapScript = "https://app.sandbox.midtrans.com/snap/snap.js";
@@ -46,6 +56,7 @@ export default function Card({ el }: { el: RecordType }) {
             document.head.removeChild(script);
         };
     }, []);
+
 
     return (
         <>
