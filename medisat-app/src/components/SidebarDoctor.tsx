@@ -11,30 +11,26 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import Image from "next/image"
-import { handleLogout } from "@/app/patients/actions"
+import { cookies } from "next/headers"
+import { redirect } from "next/navigation"
 const logo = require('../app/assets/MEDISAT.png')
 
 // Menu items.
 const items = [
   {
     title: "Beranda",
-    url: "#",
+    url: "/doctors",
     icon: Home,
   },
   {
     title: "Daftar Pasien",
-    url: "#",
+    url: "/doctors",
     icon: NotepadText,
   },
   {
     title: "Kalender",
-    url: "#",
+    url: "/doctors",
     icon: CalendarDays,
-  },
-  {
-    title: "Keluar",
-    url: "#",
-    icon: LogOut
   }
 ]
 
@@ -63,6 +59,20 @@ export function SidebarDoctor() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+
+              {/* LOGOUT BUTTON*/}
+              <form action={async () => {
+                'use server'
+                cookies().delete("Authorization")
+                redirect('/doctors/auth/login')
+              }}>
+                <SidebarMenuItem key="Keluar">
+                  <SidebarMenuButton>
+                    <LogOut color="#3e9392"></LogOut>
+                    <span>Keluar</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </form>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

@@ -2,6 +2,7 @@ import { hash } from "bcryptjs";
 import { db } from "../config";
 import { ObjectId } from "mongodb";
 import { z } from "zod";
+import { UpdateRecordType } from "@/app/api/doctors/updateRecord/[id]/route";
 
 export const DoctorSchema = z.object({
     _id: z.instanceof(ObjectId,{message:"Doctor Id is required"}).optional(),
@@ -59,13 +60,12 @@ export default class Doctor {
         await this.collRec.insertOne(data)
     }
 
-    static async updateRecord(updateRecord:RecordType){
+    static async updateRecord(updateRecord:UpdateRecordType){
         
         const data ={
             ...updateRecord,
             status:"done"
         }
-        data.updatedAt = new Date();
         await this.collRec.updateOne({_id:updateRecord._id}, {$set:data});
     }
 

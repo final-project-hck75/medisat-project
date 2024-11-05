@@ -12,18 +12,13 @@ import {
 import { Button } from "./ui/button"
 import Link from "next/link"
 import { getPatientList } from "@/app/doctors/actions"
-import { cookies } from "next/headers"
+import { recordByDoctorIdTodayType } from "@/app/types"
 
 export default async function PatientTabel() {
-
-    // const auth = cookies().get('Authorization')
-
-    // console.log(auth, "auth ==========");
-
-    // const doctorId = request.headers("id")
     
-    // const patients = await getPatientList()
-
+    const patients: recordByDoctorIdTodayType[] = await getPatientList()
+    // console.log(patients, "patients ===========");
+    
     return (
         <>
             <div className="flex flex-col items-center justify-center w-screen mx-auto md:h-screen lg:py-0">
@@ -42,29 +37,25 @@ export default async function PatientTabel() {
                                     <TableHead className="text-right">Aksi</TableHead>
                                 </TableRow>
                             </TableHeader>
-                            <TableBody>
+                                
+                                <TableBody>
+                            {patients.map((element: recordByDoctorIdTodayType) => (
                                 <TableRow>
                                     <TableCell className="font-medium">
                                         <Link href="/patient/detail">
-                                            Fani
+                                            {element.patient.name}
                                         </Link>
                                     </TableCell>
-                                    <TableCell>Jum'at 09:00 - 12:00</TableCell>
+                                    <TableCell>
+                                        {element.bookDate}
+                                        </TableCell>
                                     <TableCell className="text-right">
-                                        <Link href="/doctors/records">
+                                        <Link href={`/doctors/records?recordId=${element._id}&patientId=${element.patient._id}&name=${element.patient.name}&date=${element.bookDate}`}>
                                             <Button variant="auth">Tangani</Button>
                                         </Link>
                                     </TableCell>
                                 </TableRow>
-                                <TableRow>
-                                    <TableCell className="font-medium">Ridwan</TableCell>
-                                    <TableCell>Senin 12:00 - 15:00</TableCell>
-                                    <TableCell className="text-right">
-                                        <Link href="/doctors/records">
-                                            <Button variant="auth">Tangani</Button>
-                                        </Link>
-                                    </TableCell>
-                                </TableRow>
+                            ))}
                             </TableBody>
                         </Table>
                     </div>

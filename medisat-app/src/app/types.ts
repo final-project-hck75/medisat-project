@@ -67,6 +67,8 @@ export type recordByDoctorIdToday = {
   status:string,
   patientId:string,
   doctorId:string,
+  disease:string,
+  recipe:string,
   updatedAt:string,
   createdAt:string,
   patient:{
@@ -74,7 +76,6 @@ export type recordByDoctorIdToday = {
     nik:string,
     name:string,
     email:string,
-    password:string,
     birthDate:string,
     address:string,
     phoneNumber:string

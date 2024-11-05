@@ -5,6 +5,8 @@ import { cookies } from "next/headers";
 
 // API POST LOGIN PATIENTS
 
+// API POST REGISTER PATIENTS
+
 export async function POST(request: Request) {
   try {
     const { email, password } = await request.json();

@@ -9,6 +9,9 @@ declare global {
       MEDISAT_PASSWORD:string
       Next_PUBLIC_API_KEY: string;
       NEXT_PUBLIC_BASE_URL: string;
+      GOOGLE_CLIENT_ID: string;
+      GOOGLE_CLIENT_SECRET: string;
+      NEXTAUTH_URL: string;
     }
   } 
 }

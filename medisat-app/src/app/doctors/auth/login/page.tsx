@@ -1,16 +1,17 @@
 "use client";
 
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import Swal from "sweetalert2";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { login } from "../../actions";
+import Image from "next/image";
+import { ArrowBigLeftDash, ArrowBigRightDash } from "lucide-react";
+
+const logo = require('../../../assets/MEDISAT.png');
 
 export default function Login() {
   const router = useRouter();
+  const [isSignUp, setIsSignUp] = useState(false);
   const [user, setUser] = useState({
     employeeId: "",
     password: "",
@@ -32,101 +33,119 @@ export default function Login() {
           body: JSON.stringify(user),
         }
       );
-      // console.log(res, "ini res");
       const data = await res.json();
-      console.log(data, "ini data=======");
-
-      // console.log(data, "ini data token login=====");
 
       if (!res.ok) {
-        redirect("/doctors/auth/login");
+        router.push("/doctors/auth/login");
       }
 
       login(data.access_token);
 
       Swal.fire({
-        title: "Success!",
-        text: "Login successful!",
+        title: "Sukses!",
+        text: "Sukses Masuk!",
         icon: "success",
         confirmButtonText: "OK",
-        confirmButtonColor: "#007bff",
-        customClass: {
-          confirmButton:
-            "bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md",
-        },
+        confirmButtonColor: "#3e9392",
       }).then(() => {
         router.push("/doctors");
       });
     } catch (error) {
-      // console.log(error,"KSJDSHFHJSF");
-
+      console.log(error, "KSJDSHFHJSF");
       Swal.fire({
         title: "Error!",
-        text: "Login failed! Ivalid email or password",
+        text: "Login Gagal! Email atau Password Salah!",
         icon: "error",
         confirmButtonText: "OK",
-        confirmButtonColor: "#007bff",
+        confirmButtonColor: "#3e9392",
         customClass: {
           confirmButton:
-            "bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md",
+            "bg-emerald-500 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded-md",
         },
       });
     }
   };
 
-  const handleChange = (element: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = element.target;
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
     setUser({ ...user, [name]: value });
   };
 
+  const toggleSignUp = () => setIsSignUp((prev) => !prev);
+
   return (
-    <>
-      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <div className="w-full bg-white rounded-lg shadow border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 border-gray-200">
-          <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Login
-            </h1>
-            <form onSubmit={handleSubmit}>
-              <div>
-                <Label htmlFor="employeeId">Id Dokter</Label>
-                <Input
-                  type="text"
-                  name="employeeId"
-                  value={user.employeeId}
-                  onChange={handleChange}
-                  placeholder="Id Dokter"
-                />
-              </div>
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-gray-200 to-emerald-200">
+      <div className="relative bg-white rounded-lg shadow-lg w-full max-w-3xl overflow-hidden">
+        <div
+          className={`flex transition-transform duration-1000 ${
+            isSignUp ? "-translate-x-1/2" : "translate-x-1/2"
+          }`}
+          style={{ width: "100%" }}
+        >
+          <div className="w-1/2 p-6 space-y-4 flex flex-col items-center justify-center">
+            <Image
+              src={logo}
+              alt="MEDISAT Logo"
+            />
+            <h1 className="text-2xl font-bold text-emerald-700">Medical Sehat</h1>
+          </div>
 
-              <div>
-                <Label htmlFor="password">Sandi</Label>
-                <Input
-                  type="password"
-                  name="password"
-                  value={user.password}
-                  onChange={handleChange}
-                  placeholder="Sandi"
-                />
-              </div>
+          {/* SLIDE2*/}
+          <div className="w-1/2 p-6 space-y-4 flex flex-col items-center justify-center">
+            <h1 className="text-2xl font-bold text-emerald-700">MASUK AKUN</h1>
 
-              <Button type="submit" className="mt-5" variant="auth">
-                Login
-              </Button>
-
-              <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                Belum punya akun?{" "}
-                <Link
-                  href="#"
-                  className="font-medium text-primary-600 hover:underline text-emerald-500"
-                >
-                  Registrasi
-                </Link>
-              </p>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <input
+                type="text"
+                name="employeeId"
+                value={user.employeeId}
+                onChange={handleChange}
+                placeholder="ID Dokter"
+                className="w-full p-3 bg-gray-100 rounded-md"
+                required
+              />
+              <input
+                type="password"
+                name="password"
+                value={user.password}
+                onChange={handleChange}
+                placeholder="Kata Sandi"
+                className="w-full p-3 bg-gray-100 rounded-md"
+                required
+              />
+              <button
+                type="submit"
+                className="w-full py-3 text-white bg-emerald-500 rounded-md hover:bg-emerald-700"
+              >
+                MASUK
+              </button>
             </form>
           </div>
         </div>
+
+        {/* KOTAK SLIDING */}
+        <div
+          className={`absolute inset-y-0 left-0 w-1/2 flex items-center justify-center transition-transform duration-700 ${
+            isSignUp ? "translate-x-full" : "translate-x-0"
+          } bg-emerald-600 text-white p-8`}
+        >
+          <div className="text-center space-y-4">
+          <h2 className="text-3xl font-bold">
+              {isSignUp ? "Selamat Datang Dokter!" : "Halo Dokter"}
+              </h2>
+            <p>{isSignUp ? "Silahkan Masuk" : "Silahkan Masuk"}</p>
+            <button
+              onClick={toggleSignUp}
+              className="px-8 py-2 bg-white text-emerald-600 rounded-md hover:bg-gray-200"
+            >
+              {isSignUp ? 
+              <div className="flex flex-row"><div><ArrowBigLeftDash/></div><div>Masuk</div></div>
+               : 
+               <div className="flex flex-row"><div>Masuk</div><div><ArrowBigRightDash/></div></div>}
+            </button>
+          </div>
+        </div>
       </div>
-    </>
+    </div>
   );
 }

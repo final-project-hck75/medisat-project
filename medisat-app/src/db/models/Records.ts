@@ -32,6 +32,38 @@ class RecordsModel {
     return db.collection("records");
   }
 
+  static async getRecordHistoryPatientIdFromParams(patientId: string) {
+    const pipeline = [
+      {
+        $match: {
+          patientId: new ObjectId(patientId),
+          status:{ $in : ["paid", "done"] }
+        },
+      },
+      {
+        $lookup: {
+          from: "patients",
+          localField: "patientId",
+          foreignField: "_id",
+          as: "patient",
+        },
+      },
+      {
+        $unwind: "$patient",
+      },
+      {
+        $project: {
+          "patient.password": 0,
+        }
+      },
+      {
+        $sort: { createdAt: -1 },
+      },
+    ];
+    const record = await this.collection().aggregate(pipeline).toArray();
+    return record;
+  }
+
   static async getRecordByPatientId(patientId: string) {
     const pipeline = [
       {
@@ -74,11 +106,17 @@ class RecordsModel {
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, "0");
     const date = String(today.getDate()).padStart(2, "0");
-    const formattedDate = `${year}-${month}-${date}`;    
+    const formattedDate = `${year}-${month}-${date}`;
+    console.log(formattedDate, "formattedDate");
+
+
     const pipeline = [
       {
-        $match: {
-          doctorId: new ObjectId(doctorId),
+        $match:
+        {
+          doctorId: new ObjectId(
+            doctorId
+          ),
           status: "booked",
           bookDate: formattedDate,
         },
@@ -153,53 +191,6 @@ class RecordsModel {
     return record;
   }
 
-  static async getRecordHistoryPatientIdFromParams(patientId: string) {
-    const pipeline = [
-      {
-        $match: {
-          patientId: new ObjectId(patientId),
-          status: { $in: ["paid", "done"] },
-        },
-      },
-      {
-        $lookup: {
-          from: "patients",
-          localField: "patientId",
-          foreignField: "_id",
-          as: "patient",
-        },
-      },
-      {
-        $lookup: {
-          from: "doctors",
-          localField: "doctorId",
-          foreignField: "_id",
-          as: "doctor",
-        },
-      },
-      {
-        $unwind: "$patient",
-      },
-      {
-        $unwind: "$doctor",
-      },
-      {
-        $project:{
-          "patient.password": false,
-        }
-      },
-      {
-        $project:{
-          "doctor.password": false,
-        }
-      },
-      {
-        $sort: { createdAt: -1 },
-      },
-    ];
-    const record = await this.collection().aggregate(pipeline).toArray();
-    return record;
-  }
 
   static async updateRecord(id: string) {
     const _id = new ObjectId(id);
