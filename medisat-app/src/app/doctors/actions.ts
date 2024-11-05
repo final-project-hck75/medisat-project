@@ -16,7 +16,7 @@ export async function login(token: string) {
 
 export async function getPatientList(){
 
-        const response = await fetch(`${baseUrl}api/doctors/records`, {
+        const response = await fetch(`${baseUrl}/api/doctors/records`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

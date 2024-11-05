@@ -7,7 +7,7 @@ import { login } from "../../actions";
 import Image from "next/image";
 import { ArrowBigLeftDash, ArrowBigRightDash } from "lucide-react";
 
-const logo = require('../../../assets/MEDISAT.png');
+const logo = require("../../../assets/MEDISAT.png");
 
 export default function Login() {
   const router = useRouter();
@@ -24,7 +24,7 @@ export default function Login() {
     element.preventDefault();
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}api/doctors/login`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/doctors/login`,
         {
           method: "POST",
           headers: {
@@ -51,6 +51,8 @@ export default function Login() {
         router.push("/doctors");
       });
     } catch (error) {
+      console.log(error);
+
       Swal.fire({
         title: "Error!",
         text: "Login Gagal! Email atau Password Salah!",
@@ -79,14 +81,12 @@ export default function Login() {
           className={`flex transition-transform duration-1000 ${
             isSignUp ? "-translate-x-1/2" : "translate-x-1/2"
           }`}
-          style={{ width: "100%" }}
-        >
+          style={{ width: "100%" }}>
           <div className="w-1/2 p-6 space-y-4 flex flex-col items-center justify-center">
-            <Image
-              src={logo}
-              alt="MEDISAT Logo"
-            />
-            <h1 className="text-2xl font-bold text-emerald-700">Medical Sehat</h1>
+            <Image src={logo} alt="MEDISAT Logo" />
+            <h1 className="text-2xl font-bold text-emerald-700">
+              Medical Sehat
+            </h1>
           </div>
 
           {/* SLIDE2*/}
@@ -114,8 +114,7 @@ export default function Login() {
               />
               <button
                 type="submit"
-                className="w-full py-3 text-white bg-emerald-500 rounded-md hover:bg-emerald-700"
-              >
+                className="w-full py-3 text-white bg-emerald-500 rounded-md hover:bg-emerald-700">
                 MASUK
               </button>
             </form>
@@ -126,21 +125,30 @@ export default function Login() {
         <div
           className={`absolute inset-y-0 left-0 w-1/2 flex items-center justify-center transition-transform duration-700 ${
             isSignUp ? "translate-x-full" : "translate-x-0"
-          } bg-emerald-600 text-white p-8`}
-        >
+          } bg-emerald-600 text-white p-8`}>
           <div className="text-center space-y-4">
-          <h2 className="text-3xl font-bold">
+            <h2 className="text-3xl font-bold">
               {isSignUp ? "Selamat Datang Dokter!" : "Halo Dokter"}
-              </h2>
+            </h2>
             <p>{isSignUp ? "Silahkan Masuk" : "Silahkan Masuk"}</p>
             <button
               onClick={toggleSignUp}
-              className="px-8 py-2 bg-white text-emerald-600 rounded-md hover:bg-gray-200"
-            >
-              {isSignUp ? 
-              <div className="flex flex-row"><div><ArrowBigLeftDash/></div><div>Masuk</div></div>
-               : 
-               <div className="flex flex-row"><div>Masuk</div><div><ArrowBigRightDash/></div></div>}
+              className="px-8 py-2 bg-white text-emerald-600 rounded-md hover:bg-gray-200">
+              {isSignUp ? (
+                <div className="flex flex-row">
+                  <div>
+                    <ArrowBigLeftDash />
+                  </div>
+                  <div>Masuk</div>
+                </div>
+              ) : (
+                <div className="flex flex-row">
+                  <div>Masuk</div>
+                  <div>
+                    <ArrowBigRightDash />
+                  </div>
+                </div>
+              )}
             </button>
           </div>
         </div>

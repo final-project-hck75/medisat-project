@@ -8,7 +8,9 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import Loading from "./loading";
+import { handleLogout } from "./actions";
 
+const logo = require("@/app/assets/MEDISAT.png");
 
 export default function Medis() {
   const searchParams = useSearchParams();
@@ -16,7 +18,7 @@ export default function Medis() {
   const status_code = searchParams.get("status_code");
   const [record, setRecord] = useState<RecordType[]>([]);
   const router = useRouter();
-  const [show, setShow] = useState<boolean>(false)
+  const [show, setShow] = useState<boolean>(false);
 
   useEffect(() => {
     if (status_code === "200") {
@@ -50,18 +52,32 @@ export default function Medis() {
     return response;
   }
 
-    useEffect(
-        () => {
-          let timer1 = setTimeout(() => setShow(true), 3 * 1000);
-    
-          return () => {
-            clearTimeout(timer1);
-          };
-        },
-        [show]
-      );
-    
+  useEffect(() => {
+    const timer1 = setTimeout(() => setShow(true), 3 * 1000);
 
+    return () => {
+      clearTimeout(timer1);
+    };
+  }, [show]);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 5;
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const currentRecords = record.slice(indexOfFirstRecord, indexOfLastRecord);
+  const totalPages = Math.ceil(record.length / recordsPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
 
   useEffect(() => {
     getRecord().then(setRecord);
@@ -69,11 +85,50 @@ export default function Medis() {
 
   return (
     <div>
+      <div className="flex flex-wrap justify-between items-center my-5">
+        <Image src={logo} alt="MEDISAT Logo" width={150} height={50} />
+        <form action={handleLogout}>
+          <Button variant={"auth"}>Logout</Button>
+        </form>
+      </div>
       <div className="flex flex-wrap justify-center">
         <div>
-          {record.map((el) => (
+          <div className="flex flex-wrap justify-center gap-5">
+            <div className="flex flex-wrap justify-center">
+              <Link
+                href={"/patients/geminiAI/"}
+                className="text-xl font-bold text-blue-500 hover:text-blue-700">
+                Tanya Medisat
+              </Link>
+            </div>
+            <div>
+              <Link
+                href={"/patients/schedule/"}
+                className="text-xl font-bold text-blue-500 hover:text-blue-700">
+                Antrian baru
+              </Link>
+            </div>
+          </div>
+          {currentRecords.map((el) => (
             <Card el={el} key={el._id} />
           ))}
+        </div>
+        <div className="join">
+          <button
+            className="join-item btn"
+            onClick={handlePreviousPage}
+            disabled={currentPage === 1}>
+            «
+          </button>
+          <button className="join-item btn">
+            Page {currentPage} of {totalPages}
+          </button>
+          <button
+            className="join-item btn"
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}>
+            »
+          </button>
         </div>
       </div>
     </div>
