@@ -1,5 +1,7 @@
 import Doctor from "@/db/models/doctors";
+import PatientModel from "@/db/models/Patients";
 import RecordsModel from "@/db/models/Records";
+import PatientMail from "@/helpers/mail";
 import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -17,6 +19,19 @@ export async function POST(request: NextRequest) {
       patientId: new ObjectId(patientId),
       doctorId: new ObjectId(doctorId),
     });
+
+    const patient = await PatientModel.getPatientsById(patientId)!;
+    const doctor = await Doctor.getByDoctorId(doctorId)!;
+    const params = {
+      name: patient!.name,
+      email: patient!.email,
+      doctorName: doctor!.name,
+      bookDate,
+      status: "booked",
+    }
+    PatientMail(params);
+        
+    
 
     return NextResponse.json(
       { message: "Schedule created successfully" },
