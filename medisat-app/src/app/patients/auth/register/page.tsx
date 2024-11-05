@@ -12,7 +12,7 @@ export default function Register(){
 
     const Cookie = cookies().get("Authorization")?.value;
 
-    if (Cookie) redirect("/patients/medic")
+    if (Cookie) redirect("/patients")
     return(
         <>
         <Alert/>

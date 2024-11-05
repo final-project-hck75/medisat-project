@@ -16,6 +16,23 @@ export async function PATCH(
       { status: 201 }
     );
   } catch (error) {
-    console.log(error);
+    if(error instanceof Error){
+      return NextResponse.json(
+          {
+              message: error.message
+          },
+          {
+              status : 400
+          }
+      )
+  }
+  return NextResponse.json(
+      {
+          message : "Something went wrong"
+      },
+      {
+          status:500
+      }
+  )
   }
 }

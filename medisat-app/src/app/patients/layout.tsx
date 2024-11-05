@@ -1,3 +1,4 @@
+import Navbar from "@/components/Navbar";
 
 
 export default function RootLayout({
@@ -8,7 +9,8 @@ export default function RootLayout({
   return (
     
         <div className="w-full flex justify-center">
-        <div className="w-96">
+          <Navbar/>
+        <div className="w-96 mt-16 p-3">
           {children}
           </div>
         </div>

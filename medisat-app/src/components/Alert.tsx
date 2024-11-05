@@ -19,18 +19,26 @@ const Toast = Swal.mixin({
 export default function Alert() {
     const searchParams = useSearchParams()
     const alert = searchParams.get("alert")
+    const error = searchParams.get("error")
     const router = useRouter()
     const pathname = usePathname()
 
     useEffect(() => {
         if (alert) {
                 Toast.fire({
-                    icon: "error",
+                    icon: "success",
                     title: alert
                   });
                 router.replace(pathname)
+              }
+              if (error) {
+                Toast.fire({
+                  icon: "error",
+                  title: error
+                });
+                router.replace(pathname)
         }
-    }, [alert])
+    }, [alert, error])
 
     return (
         <>

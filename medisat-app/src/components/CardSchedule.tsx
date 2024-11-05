@@ -5,7 +5,7 @@ import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { Calendar } from "lucide-react";
 import formatDate from "@/helpers/formatDate";
 
-export default function CardSchedule({el, active, setActive}:{el:DoctorType, active:string, setActive: Dispatch<SetStateAction<string>>}) {
+export default function CardSchedule({ el, active, setActive }: { el: DoctorType, active: string, setActive: Dispatch<SetStateAction<string>> }) {
     const [selectedDate, setSelectedDate] = useState(''); //2024-11-05
     const [availableDates, setAvailableDates] = useState<Date[]>([]);
     const [selectedSchedule, setSelectedSchedule] = useState(''); //09.00 - 12.00
@@ -35,20 +35,20 @@ export default function CardSchedule({el, active, setActive}:{el:DoctorType, act
         twoWeeksFromNow.setDate(today.getDate() + 15);
 
         let currentDate = new Date(today);
-        
+
         while (currentDate <= twoWeeksFromNow) {
             const dayName = currentDate.toLocaleDateString('en-US', { weekday: 'long' });
             if (dayName === targetDay) {
                 dates.push(new Date(currentDate));
             }
-            currentDate.setDate(currentDate.getDate()+1);
+            currentDate.setDate(currentDate.getDate() + 1);
         }
 
         return dates;
     };
 
     const formatDateForDisplay = (date: Date) => {
-        return date.toLocaleDateString('en-US', { 
+        return date.toLocaleDateString('en-US', {
             weekday: 'long',
             year: 'numeric',
             month: 'long',
@@ -62,8 +62,8 @@ export default function CardSchedule({el, active, setActive}:{el:DoctorType, act
 
     const handleScheduleSelect = (schedule: string) => {
         if (active !== el._id) setActive(el._id);
-        
-        
+
+
         const [day, timeRange] = schedule.split(", ");
         setSelectedSchedule(timeRange);
     };
@@ -71,41 +71,43 @@ export default function CardSchedule({el, active, setActive}:{el:DoctorType, act
     // console.log(selectedDate, "<<<<<")
     const handleDateSelect = (dateValue: string) => {
         setSelectedDate(dateValue);
-        
+
     };
 
     useEffect(() => {
-        setFormattedSchedule(`${selectedDate? formatDate(selectedDate) : selectedDate} ${selectedSchedule}`);
+        setFormattedSchedule(`${selectedDate ? formatDate(selectedDate) : selectedDate} ${selectedSchedule}`);
     }, [selectedDate, selectedSchedule])
 
     return (
-        <div className="w-full flex flex-wrap">
-            <div className="w-1/2 flex flex-wrap justify-center">
+        <div className="w-full flex flex-col">
+            <div className="w-full flex flex-wrap justify-center my-3">
                 <div className="w-full flex justify-center">
-                    <img src={el.image} className="w-20 h-20 rounded-full" alt={el.name}/>
-                </div>
-                <div className="w-full flex justify-center mt-2">
-                    <p className="font-semibold">{el.name}</p>
-                </div>
-                <div className="w-full flex justify-center">
-                    <p className="text-gray-600">{el.polyclinic}</p>
+                    <img src={el.image} className="w-20 h-20 rounded-sm" alt={el.name} />
+                    <div className="flex flex-wrap">
+                        <div className="w-full flex justify-center mt-2">
+                            <p className="font-semibold text-xs">{el.name}</p>
+                        </div>
+                        <div className="w-full flex justify-center">
+                            <p className="text-gray-600">{el.polyclinic}</p>
+                        </div>
+
+                    </div>
                 </div>
             </div>
-            <div className="w-1/2 flex flex-wrap justify-center">
+            <div className="w-full flex flex-wrap justify-center">
                 <div className="w-full flex flex-wrap justify-center items-center mb-3">
                     <Label className="text-lg font-semibold">Jadwal Praktek</Label>
                 </div>
                 <div className="w-full flex flex-wrap justify-center gap-2">
                     {el.schedule.map((schedule, i) => (
-                        <Button 
+                        <Button
                             key={i}
                             type="button"
                             variant="outline"
-                            className={`${
-                                selectedSchedule === schedule.split(", ")[1] 
-                                ? 'bg-blue-100 border-blue-500' 
+                            className={`${selectedSchedule === schedule.split(", ")[1]
+                                ? 'bg-blue-100 border-blue-500'
                                 : ''
-                            }`}
+                                }`}
                             onClick={() => handleScheduleSelect(schedule)}
                         >
                             {schedule}
@@ -136,12 +138,12 @@ export default function CardSchedule({el, active, setActive}:{el:DoctorType, act
                         </div>
                     </div>
                 )}
-                
+
                 {/* Hidden inputs for form submission */}
                 <input type="hidden" name="doctorId" value={el._id} />
                 <input type="hidden" name="selectedDate" value={selectedDate} />
                 <input type="hidden" name="timeRange" value={selectedSchedule} />
-                
+
                 {selectedDate && (
                     <div className="w-full mt-4 p-3 bg-blue-50 rounded-lg">
                         <Label className="block mb-2 text-xs">Jadwal yang Dipilih:</Label>

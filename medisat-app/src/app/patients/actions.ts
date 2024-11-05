@@ -24,11 +24,11 @@ export async function login(formData: FormData) {
   };
 
   if(!body.email) {
-    redirect("/patients/auth/login?alert=Email tidak boleh kosong")
+    redirect("/patients/auth/login?error=Email tidak boleh kosong")
   }
 
   if(!body.password) {
-    redirect("/patients/auth/login?alert=Password tidak boleh kosong")
+    redirect("/patients/auth/login?error=Password tidak boleh kosong")
   }
 
   const response = await fetch(
@@ -48,7 +48,7 @@ export async function login(formData: FormData) {
   };
   
   if (!response.ok) {
-    redirect(`/patients/auth/login?alert=${data.message}`);
+    redirect(`/patients/auth/login?error=${data.message}`);
   }
 
   cookies().set("Authorization", `Bearer ${data.accessToken}`);
@@ -68,31 +68,31 @@ export async function register(formData: FormData) {
   };
 
   if(!body.email) {
-    redirect("/patients/auth/register?alert=Email tidak boleh kosong")
+    redirect("/patients/auth/register?error=Email tidak boleh kosong")
   }
 
   if(!body.password) {
-    redirect("/patients/auth/register?alert=Password tidak boleh kosong")
+    redirect("/patients/auth/register?error=Password tidak boleh kosong")
   }
 
   if(!body.name) {
-    redirect("/patients/auth/register?alert=Nama tidak boleh kosong")
+    redirect("/patients/auth/register?error=Nama tidak boleh kosong")
   }
 
   if(!body.nik) {
-    redirect("/patients/auth/register?alert=NIK tidak boleh kosong")
+    redirect("/patients/auth/register?error=NIK tidak boleh kosong")
   }
 
   if(!body.birthDate) {
-    redirect("/patients/auth/register?alert=Tanggal lahir tidak boleh kosong")
+    redirect("/patients/auth/register?error=Tanggal lahir tidak boleh kosong")
   }
 
   if(!body.address) {
-    redirect("/patients/auth/register?alert=Alamat tidak boleh kosong")
+    redirect("/patients/auth/register?error=Alamat tidak boleh kosong")
   }
 
   if(!body.phoneNumber) {
-    redirect("/patients/auth/register?alert=Nomor telepon tidak boleh kosong")
+    redirect("/patients/auth/register?error=Nomor telepon tidak boleh kosong")
   }
 
 
@@ -110,7 +110,7 @@ export async function register(formData: FormData) {
   await response.json();
 
   if (!response.ok) {
-    redirect("/patients/auth/register?alert=Email sudah terdaftar");
+    redirect("/patients/auth/register?error=Email sudah terdaftar");
   }
 
   redirect("/patients/auth/login?alert=Account created successfully");
@@ -128,15 +128,15 @@ export async function handleSchedule(formData: FormData) {
     const timeRange = formData.get("timeRange");
 
     if(!doctorId) {
-      redirect("/patients/schedule?alert=Undefined")
+      redirect("/patients/schedule?error=Undefined")
     }
 
     if(!timeRange) {
-      redirect("/patients/schedule?alert=Mohon untuk memilih jadwal terlebih dahulu")
+      redirect("/patients/schedule?error=Mohon untuk memilih jadwal terlebih dahulu")
     }
 
     if(!appointmentDate) {
-      redirect("/patients/schedule?alert=Mohon untuk memilih tanggal terlebih dahulu")
+      redirect("/patients/schedule?error=Mohon untuk memilih tanggal terlebih dahulu")
     }
 
     // Format untuk API

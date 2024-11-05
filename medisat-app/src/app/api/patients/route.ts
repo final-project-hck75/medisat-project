@@ -9,6 +9,5 @@ export async function GET(request: NextRequest) {
   const search = searchParams.get("search");
 
   const patient = await PatientModel.getAllPatients(page, search);
-  console.log(patient);
   return Response.json(patient);
 }

@@ -8,11 +8,28 @@ export async function GET(request: NextRequest) {
         // console.log("masuk api");
         
         const doctorId = request.headers.get('id') as string;
-        console.log(doctorId, "doctorId");
+
         
         const patients = await RecordsModel.getRecordByDoctorIdToday(doctorId);
         return NextResponse.json(patients,{status:200})
     } catch (error) {
-        console.log(error);       
+        if(error instanceof Error){
+            return NextResponse.json(
+                {
+                    message: error.message
+                },
+                {
+                    status : 400
+                }
+            )
+        }
+        return NextResponse.json(
+            {
+                message : "Something went wrong"
+            },
+            {
+                status:500
+            }
+        )      
     }
 }

@@ -12,7 +12,7 @@ export default function Login() {
 
     const Cookie = cookies().get("Authorization")?.value;
 
-    if (Cookie) redirect("/patients/medic")
+    if (Cookie) redirect("/patients")
 
     
 
@@ -34,7 +34,7 @@ export default function Login() {
 
             <div className="flex flex-wrap gap-10 items-center">
                 <Button variant="auth">Log In</Button>
-                <p><Link className="text-blue-600" href={"/patients/auth/register"}>Registrasi disini!</Link></p>
+                <p>Belum punya akun? Silahkan daftarkan diri anda<Link className="text-blue-600" href={"/patients/auth/register"}> disini</Link></p>
             </div>
         </form>
         </div>

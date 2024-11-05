@@ -3,12 +3,11 @@
 import Card from "@/components/Card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { handleLogout } from "./actions";
 import { RecordType } from "@/app/types";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { redirect, usePathname, useRouter, useSearchParams } from "next/navigation";
-const logo = require('@/app/assets/MEDISAT.png')
+import { useRouter, useSearchParams } from "next/navigation";
+import Loading from "./loading";
 
 
 export default function Medis() {
@@ -17,6 +16,7 @@ export default function Medis() {
     const order_id = searchParams.get("order_id")
     const status_code = searchParams.get("status_code")
     const [record, setRecord] = useState<RecordType[]>([]);
+    const [show, setShow] = useState<boolean>(false)
     const router = useRouter()
 
     useEffect(() => {
@@ -52,42 +52,26 @@ export default function Medis() {
         getRecord().then(setRecord)
     }, [])
 
-
+    useEffect(
+        () => {
+          let timer1 = setTimeout(() => setShow(true), 3 * 1000);
+    
+          return () => {
+            clearTimeout(timer1);
+          };
+        },
+        [show]
+      );
+    
 
     return (
         <div>
-            <div className="flex flex-wrap justify-between items-center my-5">
-                {/* <Sidebar/> */}
-                <Image
-                    src={logo}
-                    alt="MEDISAT Logo"
-                    width={150}
-                    height={50}
-                />
-                <form action={handleLogout}>
-                    <Button variant={"auth"}>Logout</Button>
-
-                </form>
-            </div>
-            <div className="flex flex-wrap justify-center">
+            
+            <div className="flex flex-wrap justify-center p">
                 <div>
-                    <div className="flex flex-wrap justify-center gap-5">
-                        <div className="flex flex-wrap justify-center">
-                            <Link
-                                href={"/patients/geminiAI/"}
-                                className="text-xl font-bold text-blue-500 hover:text-blue-700"
-                            >
-                                Tanya Medisat
-                            </Link>
-                        </div>
-                        <div>
-                            <Link href={"/patients/schedule/"} className="text-xl font-bold text-blue-500 hover:text-blue-700">Antrian baru</Link>
-                        </div>
-
-                    </div>
-                    {record.map(el => (
+                    {show? record.length === 0 ? <h1 className="text-xl font-bold text-emerald-700 text-center">Selamat datang di Medisat</h1> : record.map(el => (
                         <Card el={el} key={el._id} />
-                    ))}
+                    )) : <Loading/>}
 
                 </div>
             </div>

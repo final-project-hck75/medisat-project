@@ -51,7 +51,6 @@ export default function Login() {
         router.push("/doctors");
       });
     } catch (error) {
-      console.log(error, "KSJDSHFHJSF");
       Swal.fire({
         title: "Error!",
         text: "Login Gagal! Email atau Password Salah!",

@@ -13,14 +13,12 @@ export type UpdateRecordType = {
 // ? Untuk update record pasien
 export async function PUT(request: NextRequest, {params}:{params:{id:string}}) {
     try {
-        console.log(params, "params =======");
         
         const _id = new ObjectId(params.id);
 
     const { symptom, disease, recipe, notes } =
       await request.json();
 
-    console.log(_id);
 
     await Doctor.updateRecord({
       _id,
@@ -35,6 +33,23 @@ export async function PUT(request: NextRequest, {params}:{params:{id:string}}) {
       { status: 201 }
     );
   } catch (error) {
-    console.log(error);
+    if(error instanceof Error){
+      return NextResponse.json(
+          {
+              message: error.message
+          },
+          {
+              status : 400
+          }
+      )
+  }
+  return NextResponse.json(
+      {
+          message : "Something went wrong"
+      },
+      {
+          status:500
+      }
+  )
   }
 }

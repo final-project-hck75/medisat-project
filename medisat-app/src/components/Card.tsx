@@ -4,10 +4,11 @@ import { handlePayment } from "@/app/patients/actions";
 import { RecordType } from "@/app/types";
 import formatDate from "@/helpers/formatDate";
 import { useSearchParams } from "next/navigation";
+import { NextResponse } from "next/server";
 import { use, useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
-export default function Card({ el }: { el: RecordType }) {
+export default function Card({ el }: { el: RecordType }, {response}: {response: Response}) {
     const handleClick = async () => {
         try {
             const formData = new FormData();
@@ -16,8 +17,7 @@ export default function Card({ el }: { el: RecordType }) {
             
             window.snap.pay(data.token, {
                 onSuccess: function (result) {
-                    console.log('success');
-                    console.log(result);
+
                     return false
                 },
                 onPending: function(result) {
@@ -25,11 +25,44 @@ export default function Card({ el }: { el: RecordType }) {
                     console.log(result);
                 },
                 onError: function(result) {
-                    console.log('error');
-                    console.log(result);
+                    if(response instanceof Error){
+                        return NextResponse.json(
+                            {
+                                message: response.message
+                            },
+                            {
+                                status : 400
+                            }
+                        )
+                    }
+                    return NextResponse.json(
+                        {
+                            message : "Something went wrong"
+                        },
+                        {
+                            status:500
+                        }
+                    )
                 },
                 onClose: function() {
-                    console.log('customer closed the popup without finishing the payment');
+                    if(response instanceof Error){
+                        return NextResponse.json(
+                            {
+                                message: response.message
+                            },
+                            {
+                                status : 400
+                            }
+                        )
+                    }
+                    return NextResponse.json(
+                        {
+                            message : "Something went wrong"
+                        },
+                        {
+                            status:500
+                        }
+                    )
                 },
             });
         } catch (error) {
@@ -62,7 +95,7 @@ export default function Card({ el }: { el: RecordType }) {
                         <input type="hidden" name="id" value={el._id} />
                         <div className="p-3 w-1/3">
                             <p className="text-sm text-gray-500">Status</p>
-                            <p className="text-emerald-700">{el.status}</p>
+                            <p className="text-emerald-700">{el.status === "done" ? "Pemeriksaan Selesai" : el.status === "paid" ? "Sudah Bayar" : "Pemeriksaan menanti"}</p>
                         </div>
 
                         <div className="p-3 w-2/3 flex flex-wrap justify-end">
@@ -100,7 +133,7 @@ export default function Card({ el }: { el: RecordType }) {
                                 <p className="text-emerald-700">Rp. 300.000</p>
                             </div>
                             <div>
-                                {el.status !== "paid" && (
+                                {el.status === "done" && (
                                     <button type="submit" className="bg-emerald-700 text-white px-3 py-2 rounded-md">Bayar</button>
                                 )}
                             </div>

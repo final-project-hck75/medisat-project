@@ -107,7 +107,7 @@ class RecordsModel {
     const month = String(today.getMonth() + 1).padStart(2, "0");
     const date = String(today.getDate()).padStart(2, "0");
     const formattedDate = `${year}-${month}-${date}`;
-    console.log(formattedDate, "formattedDate");
+    // console.log(formattedDate, "formattedDate");
 
 
     const pipeline = [

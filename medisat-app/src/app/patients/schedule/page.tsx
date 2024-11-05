@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useState, useEffect } from "react";
 import { handleSchedule } from "../actions";
+import Alert from "@/components/Alert";
 
 export default function Schedule() {
     const [schedule, setSchedule] = useState<DoctorType[]>([]);
@@ -32,9 +33,11 @@ export default function Schedule() {
 
     return (
         <div>
+            <Alert/>
             <div className="w-full flex flex-wrap justify-center py-5">
                 <Label className="text-xl font-bold">JADWAL DOKTER PRAKTEK</Label>
             </div>
+            <div className="w-full flex flex-wrap justify-center">
             {schedule.map(el => (
                 <form action={handleSchedule} className="my-3">
                         <div key={el._id} className="flex flex-wrap justify-between bg-emerald-50 rounded-xl p-5">
@@ -50,13 +53,14 @@ export default function Schedule() {
                                     variant="ghost"
                                     disabled={active === "" || active !== el._id}
                                     className="text-blue-600 hover:text-xl hover:text-blue-600 rounded-xl"
-                                >
+                                    >
                                     Jadwalkan sekarang!
                                 </Button>
                             </div>
                         </div>
                 </form>
             ))}
+            </div>
         </div>
     );
 }
