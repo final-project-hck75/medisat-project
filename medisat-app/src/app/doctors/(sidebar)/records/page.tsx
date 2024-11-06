@@ -1,4 +1,4 @@
-'use server'
+
 import React from "react";
 import HistoryCard from "../../../../components/HistoryCard";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import { updateRekamMedis } from "../../actions";
 import { redirect } from "next/navigation";
 import LogError from "@/components/LogError";
 import { formatDateRecord } from "@/helpers/formatDate";
+import { revalidateTag } from "next/cache";
 
 export default async function Records({ searchParams }: { searchParams: { [key: string]: string } }) {
 
@@ -68,7 +69,8 @@ export default async function Records({ searchParams }: { searchParams: { [key: 
         }
 
         updateRekamMedis(recordId, formRecord)
-
+        revalidateTag('getPatientList')
+        
         redirect('/doctors')
     }
 

@@ -3,10 +3,8 @@
 import { handlePayment } from "@/app/patients/actions";
 import { RecordType } from "@/app/types";
 import formatDate from "@/helpers/formatDate";
-import { useSearchParams } from "next/navigation";
 import { NextResponse } from "next/server";
-import { use, useEffect, useState } from "react";
-import Swal from "sweetalert2";
+import { useEffect } from "react";
 
 export default function Card(
   { el }: { el: RecordType },
@@ -23,8 +21,24 @@ export default function Card(
           return false;
         },
         onPending: function (result) {
-          console.log("pending");
-          console.log(result);
+          if (response instanceof Error) {
+            return NextResponse.json(
+              {
+                message: response.message,
+              },
+              {
+                status: 400,
+              }
+            );
+          }
+          return NextResponse.json(
+            {
+              message: "Something went wrong",
+            },
+            {
+              status: 500,
+            }
+          );
         },
         onError: function (result) {
           if (response instanceof Error) {
@@ -96,7 +110,7 @@ export default function Card(
             <input type="hidden" name="id" value={el._id} />
             <div className="p-3 w-1/3">
               <p className="text-sm text-gray-500">Status</p>
-              <p className="text-emerald-700">{el.status}</p>
+              <p className="text-emerald-700">{el.status === "done" ? "Pemeriksaan Selesai" : el.status === "paid" ? "Sudah Bayar" : "Pemeriksaan Menanti"}</p>
             </div>
 
             <div className="p-3 w-2/3 flex flex-wrap justify-end">

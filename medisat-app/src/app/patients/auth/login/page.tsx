@@ -6,6 +6,7 @@ import { login } from "@/app/patients/actions";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Alert from "@/components/Alert";
+import OauthButton from "@/components/OauthButton";
 
 export default function Login() {
   const Cookie = cookies().get("Authorization")?.value;
@@ -42,6 +43,7 @@ export default function Login() {
                 <p>Belum punya akun? Silahkan daftarkan diri anda<Link className="text-blue-600" href={"/patients/auth/register"}> disini</Link></p>
             </div>
         </form>
+        <OauthButton />
       </div>
     </>
   );

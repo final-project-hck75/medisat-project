@@ -9,6 +9,7 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import Loading from "./loading";
 import { handleLogout } from "./actions";
+import { revalidatePath } from "next/cache";
 
 const logo = require("@/app/assets/MEDISAT.png");
 
@@ -20,6 +21,13 @@ export default function Medis() {
   const router = useRouter();
   const [show, setShow] = useState<boolean>(false);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 5;
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const currentRecords = record.slice(indexOfFirstRecord, indexOfLastRecord);
+  const totalPages = Math.ceil(record.length / recordsPerPage);
+
   useEffect(() => {
     if (status_code === "200") {
       fetch(process.env.NEXT_PUBLIC_BASE_URL + `/api/payments/${order_id}`, {
@@ -29,6 +37,7 @@ export default function Medis() {
         },
       }).then(() => {
         router.push("/patients");
+        
       });
     }
   }, [status_code, order_id]);
@@ -60,12 +69,7 @@ export default function Medis() {
     };
   }, [show]);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 5;
-  const indexOfLastRecord = currentPage * recordsPerPage;
-  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  const currentRecords = record.slice(indexOfFirstRecord, indexOfLastRecord);
-  const totalPages = Math.ceil(record.length / recordsPerPage);
+
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -84,36 +88,9 @@ export default function Medis() {
   }, []);
 
   return (
-    <div>
-      <div className="flex flex-wrap justify-between items-center my-5">
-        <Image src={logo} alt="MEDISAT Logo" width={150} height={50} />
-        <form action={handleLogout}>
-          <Button variant={"auth"}>Logout</Button>
-        </form>
-      </div>
-      <div className="flex flex-wrap justify-center">
-        <div>
-          <div className="flex flex-wrap justify-center gap-5">
-            <div className="flex flex-wrap justify-center">
-              <Link
-                href={"/patients/geminiAI/"}
-                className="text-xl font-bold text-blue-500 hover:text-blue-700">
-                Tanya Medisat
-              </Link>
-            </div>
-            <div>
-              <Link
-                href={"/patients/schedule/"}
-                className="text-xl font-bold text-blue-500 hover:text-blue-700">
-                Antrian baru
-              </Link>
-            </div>
-          </div>
-          {currentRecords.map((el) => (
-            <Card el={el} key={el._id} />
-          ))}
-        </div>
-        <div className="join">
+      <div className="flex flex-col justify-center">
+
+        <div className="join flex flex-wrap justify-center">
           <button
             className="join-item btn"
             onClick={handlePreviousPage}
@@ -130,7 +107,17 @@ export default function Medis() {
             »
           </button>
         </div>
+        {currentRecords.length === 0 && 
+          <div className="bg-white rounded-xl border border-solid border-emerald-800 p-3 my-2">
+            <div>No records found</div>
+          </div>
+        }
+        {currentRecords.length > 0 &&
+          currentRecords.map((el) => (
+            <Card el={el} key={el._id} />
+        ))}
+
       </div>
-    </div>
+
   );
 }

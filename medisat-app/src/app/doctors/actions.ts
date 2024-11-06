@@ -1,6 +1,9 @@
 'use server'
 
+import { revalidateTag } from "next/cache";
+
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -22,6 +25,7 @@ export async function getPatientList(){
                 'Content-Type': 'application/json',
                 Cookie: cookies().toString(),
             },
+            next: {tags: ['getPatientList']}
         });
 
 
@@ -70,5 +74,8 @@ export async function updateRekamMedis(recordId: string|null, form: Object){
         if (!response.ok) {
             throw new Error("Gagal mengupdate rekam medis");
         }
+
+        // revalidateTag('getPatientList');
+        // redirect('/doctors');
 
 }

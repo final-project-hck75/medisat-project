@@ -2,10 +2,11 @@
 
 import { useState, ChangeEvent, FormEvent } from "react";
 import Swal from "sweetalert2";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { login } from "../../actions";
 import Image from "next/image";
 import { ArrowBigLeftDash, ArrowBigRightDash } from "lucide-react";
+import Alert from "@/components/Alert";
 
 const logo = require("../../../assets/MEDISAT.png");
 
@@ -22,7 +23,16 @@ export default function Login() {
     // console.log(user.password, "ini password");
 
     element.preventDefault();
+
+    
     try {
+      if(!user.employeeId) {
+        redirect("/doctors/auth/login?error=ID Dokter tidak boleh kosong")
+      }
+  
+      if(!user.password) {
+        redirect("/doctors/auth/login?error=Kata Sandi tidak boleh kosong")
+      }
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/doctors/login`,
         {
@@ -36,7 +46,7 @@ export default function Login() {
       const data = await res.json();
 
       if (!res.ok) {
-        router.push("/doctors/auth/login");
+        
       }
 
       login(data.access_token);
@@ -51,7 +61,6 @@ export default function Login() {
         router.push("/doctors");
       });
     } catch (error) {
-      console.log(error);
 
       Swal.fire({
         title: "Error!",
@@ -75,6 +84,8 @@ export default function Login() {
   const toggleSignUp = () => setIsSignUp((prev) => !prev);
 
   return (
+    <>
+    <Alert />
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-gray-200 to-emerald-200">
       <div className="relative bg-white rounded-lg shadow-lg w-full max-w-3xl overflow-hidden">
         <div
@@ -154,5 +165,6 @@ export default function Login() {
         </div>
       </div>
     </div>
+    </>
   );
 }

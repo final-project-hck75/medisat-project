@@ -117,7 +117,7 @@ export default function CardSchedule({ el, active, setActive }: { el: DoctorType
                 {selectedSchedule && (
                     <div className="w-full mt-4">
                         <Label className="block mb-2">Pilih Tanggal</Label>
-                        <div className="relative">
+                        <div>
                             <select
                                 name="appointmentDate"
                                 className="w-full px-4 py-2 pr-8 border rounded-lg focus:outline-none focus:border-blue-500"

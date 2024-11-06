@@ -1,7 +1,7 @@
 declare global {
   interface Window {
     snap: {
-      pay: (token: string, options: { 
+      pay: (token: string, options: {
         onSuccess: (result: any) => void,
         onPending: (result: any) => void,
         onError: (result: any) => void,
@@ -16,6 +16,11 @@ declare global {
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+
+export async function setCookieOauth(token: string) {
+  cookies().set("Authorization", `Bearer ${token}`);
+  redirect("/patients")
+}
 
 export async function login(formData: FormData) {
   const body = {
@@ -41,12 +46,12 @@ export async function login(formData: FormData) {
       },
     }
   );
-  
+
   const data = (await response.json()) as {
     accessToken?: string;
     message?: string;
   };
-  
+
   if (!response.ok) {
     redirect(`/patients/auth/login?error=${data.message}`);
   }
@@ -122,14 +127,42 @@ export const handleLogout = async () => {
 };
 
 export async function handleSchedule(formData: FormData) {
-    // Get form data
-    const doctorId = formData.get("doctorId");
-    const appointmentDate = formData.get("appointmentDate");
-    const timeRange = formData.get("timeRange");
+  // Get form data
+  const doctorId = formData.get("doctorId");
+  const appointmentDate = formData.get("appointmentDate");
+  const timeRange = formData.get("timeRange");
 
     if(!doctorId) {
-      redirect("/patients/schedule?error=Undefined")
+      redirect("/patients/schedule?error=Dokter sedang tidak tersedia")
     }
+
+  if (!timeRange) {
+    redirect("/patients/schedule?alert=Mohon untuk memilih jadwal terlebih dahulu")
+  }
+
+  if (!appointmentDate) {
+    redirect("/patients/schedule?alert=Mohon untuk memilih tanggal terlebih dahulu")
+  }
+
+  // Format untuk API
+  const body = {
+    doctorId: doctorId.toString(),
+    bookDate: appointmentDate.toString(),
+    schedule: timeRange.toString(),
+  };
+
+  // Kirim ke API
+
+  const response = await fetch(
+    process.env.NEXT_PUBLIC_BASE_URL + "/api/patients/insertRecord",
+    {
+      method: "POST",
+      headers: {
+        Cookie: cookies().toString(),
+      },
+      body: JSON.stringify(body),
+    }
+  );
 
     if(!timeRange) {
       redirect("/patients/schedule?error=Mohon untuk memilih jadwal terlebih dahulu")
@@ -138,38 +171,17 @@ export async function handleSchedule(formData: FormData) {
     if(!appointmentDate) {
       redirect("/patients/schedule?error=Mohon untuk memilih tanggal terlebih dahulu")
     }
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Failed to create appointment");
+  }
 
-    // Format untuk API
-    const body = {
-      doctorId: doctorId.toString(),
-      bookDate: appointmentDate.toString(),
-      schedule: timeRange.toString(),
-    };
+  const data = await response.json();
 
-    // Kirim ke API
+  // Revalidate dan redirect
+  revalidatePath("/patients");
+  redirect("/patients");
 
-    const response = await fetch(
-      process.env.NEXT_PUBLIC_BASE_URL + "/api/patients/insertRecord",
-      {
-        method: "POST",
-        headers: {
-          Cookie: cookies().toString(),
-        },
-        body: JSON.stringify(body),
-      }
-    );
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Failed to create appointment");
-    }
-
-    const data = await response.json();
-
-    // Revalidate dan redirect
-    revalidatePath("/patients");
-    redirect("/patients");
-  
 }
 
 export const handlePayment = async (formData: FormData) => {
